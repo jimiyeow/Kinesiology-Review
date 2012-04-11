@@ -22,7 +22,7 @@
 
 NSMutableArray *activitiesLists;	//Array of arrays of activities
 NSMutableArray *domainTitles;	//Names of each domain
-NSInteger level, domain;	//Indexes of selections in each section
+NSInteger level = -1, domain = -1;	//Indexes of selections in each section
 NSInteger const levels = 0;	//For better readability below
 
 - (void)awakeFromNib
@@ -38,8 +38,8 @@ NSInteger const levels = 0;	//For better readability below
 	// Do any additional setup after loading the view, typically from a nib.
 	self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
 	
-	domainTitles = [NSMutableArray new];
 	NSXMLParser *parser = [[NSXMLParser alloc] initWithContentsOfURL:[NSURL URLWithString:@"http://dl.dropbox.com/u/2037194/sample-input.xml"]];
+	domainTitles = [NSMutableArray new];
 	[parser setDelegate:self];
 	[parser parse];
 }
@@ -142,8 +142,10 @@ NSInteger const levels = 0;	//For better readability below
 		domain = indexPath.row;
 	}
 	
-	_detailViewController.selectedActivities = [[activitiesLists objectAtIndex:level] objectAtIndex:domain];
-	_detailViewController.selectedListTitle = [NSString stringWithFormat:@"Level %d — %@", level + 1, [domainTitles objectAtIndex:domain]];
+	if (level != -1 && domain != -1) {
+		_detailViewController.selectedActivities = [[activitiesLists objectAtIndex:level] objectAtIndex:domain];
+		_detailViewController.selectedListTitle = [NSString stringWithFormat:@"Level %d — %@", level + 1, [domainTitles objectAtIndex:domain]];
+	}
 	
 	for (NSInteger i = 0; i < [tableView numberOfRowsInSection:indexPath.section]; i++) {
 		if (i != indexPath.row) {
