@@ -101,7 +101,6 @@ NSInteger const levels = 0;	//For better readability below
 		cell.textLabel.text = [NSString stringWithFormat:@"Level %d", indexPath.row + 1];
     } else {
 		cell.textLabel.text = [domainTitles objectAtIndex:indexPath.row];
-		NSLog(@"Set domain row %d label to %@", indexPath.row, [domainTitles objectAtIndex:indexPath.row]);
 	}
 	
 	return cell;
@@ -213,7 +212,11 @@ NSMutableArray *currentActivityLevels;	//The levels that the activity will be ad
 		
 		//Check if domain is already in list
 		for (NSInteger i = 0; i < domainTitles.count; i++) {
-			if ([[domainTitles objectAtIndex:i] isEqualToString:currentValue]) {
+			
+			//This shouldn't be necessary, but it seems that retrieving stored domain titles adds newline characters, so this needs to be trimmed before being compared
+			NSString *trimmedTitle = [[domainTitles objectAtIndex:i] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+			
+			if ([trimmedTitle isEqualToString:currentValue]) {
 				newDomain = NO;
 				domainIndex = i;
 				break;
