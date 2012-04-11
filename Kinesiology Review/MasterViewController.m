@@ -160,6 +160,7 @@ NSInteger const levels = 0;	//For better readability below
 Activity *currentActivity;	//The activity being added
 NSMutableString *currentString;	//The value of the current element being read
 NSMutableArray *currentActivityLevels;	//The levels that the activity will be added to.  This is an array rather than just a number in case it will be added to multiple levels.
+NSMutableArray *currentDomains;
 
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
 	
@@ -168,6 +169,7 @@ NSMutableArray *currentActivityLevels;	//The levels that the activity will be ad
 	} else if ([elementName isEqualToString:@"activity"]) {
 		currentActivity = [Activity new];
 		currentActivityLevels = [NSMutableArray new];
+		currentDomains = [NSMutableArray new];
 	}
 	
 	currentString = [NSMutableString new];
@@ -180,8 +182,55 @@ NSMutableArray *currentActivityLevels;	//The levels that the activity will be ad
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
 	
 	if ([elementName isEqualToString:@"activity"]) {
+		//This doesn't seem like it should be necessary, but retrieving titles from arrays keeps adding whitespace, so this is used to trim them for comparison
+		NSCharacterSet *trimCharacters = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+		
+		for (NSInteger j = 0; j < currentDomains.count; j++) {
+			NSString *domainTitle = [[currentDomains objectAtIndex:j] stringByTrimmingCharactersInSet:trimCharacters];
+			
+			Boolean newDomain = YES;
+			NSInteger domainIndex;
+			
+			//Check if domain is already in list
+			for (NSInteger i = 0; i < domainTitles.count; i++) {
+				NSString *compareTitle = [[domainTitles objectAtIndex:i] stringByTrimmingCharactersInSet:trimCharacters];
+				
+				if ([compareTitle isEqualToString:domainTitle]) {
+					newDomain = NO;
+					domainIndex = i;
+					break;
+				}
+			}
+			
+			//If it's not, add it
+			if (newDomain) {
+				domainIndex = domainTitles.count;
+				[domainTitles addObject:domainTitle];
+				
+				//And add it to each level
+				for (NSInteger i = 0; i < activitiesLists.count; i++) {
+					[[activitiesLists objectAtIndex:i] addObject:[NSMutableArray new]];
+				}
+			}
+			
+			//Then add activity into the lists, as long as it's not already there
+			
+			for (NSInteger i = 0; i < currentActivityLevels.count; i++) {
+				
+				NSInteger activityLevel = [(NSNumber *)[currentActivityLevels objectAtIndex:i] integerValue];
+				
+				NSMutableArray *domainActivities = [[activitiesLists objectAtIndex:activityLevel - 1] objectAtIndex:domainIndex];
+				
+				if (![domainActivities containsObject:currentActivity]) {
+					[domainActivities addObject:currentActivity];
+				}
+			}
+		}
+		
+		
 		currentActivity = nil;
 		currentActivityLevels = nil;
+		currentDomains = nil;
 	} else if ([elementName isEqualToString:@"title"]) {
 		currentActivity.title = currentString;
 	} else if ([elementName isEqualToString:@"description"]) {
@@ -205,45 +254,7 @@ NSMutableArray *currentActivityLevels;	//The levels that the activity will be ad
 		//And add the level to the list of levels the activity will belong to
 		[currentActivityLevels addObject:[NSNumber numberWithInteger:levelValue]];
 	} else if ([elementName isEqualToString:@"domain"]) {
-		Boolean newDomain = YES;
-		NSInteger domainIndex;
-		
-		//Check if domain is already in list
-		for (NSInteger i = 0; i < domainTitles.count; i++) {
-			
-			//This shouldn't be necessary, but it seems that retrieving stored domain titles adds newline characters, so this needs to be trimmed before being compared
-			NSString *trimmedTitle = [[domainTitles objectAtIndex:i] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-			
-			if ([trimmedTitle isEqualToString:currentString]) {
-				newDomain = NO;
-				domainIndex = i;
-				break;
-			}
-		}
-		
-		//If it's not, add it
-		if (newDomain) {
-			domainIndex = domainTitles.count;
-			[domainTitles addObject:currentString];
-			
-			//And add it to each level
-			for (NSInteger i = 0; i < activitiesLists.count; i++) {
-				[[activitiesLists objectAtIndex:i] addObject:[NSMutableArray new]];
-			}
-		}
-		
-		//Then add activity into the lists, as long as it's not already there
-		
-		for (NSInteger i = 0; i < currentActivityLevels.count; i++) {
-			
-			NSInteger activityLevel = [(NSNumber *)[currentActivityLevels objectAtIndex:i] integerValue];
-			
-			NSMutableArray *domainActivities = [[activitiesLists objectAtIndex:activityLevel - 1] objectAtIndex:domainIndex];
-			
-			if (![domainActivities containsObject:currentActivity]) {
-				[domainActivities addObject:currentActivity];
-			}
-		}
+		[currentDomains addObject:currentString];
 	}
 }
 
