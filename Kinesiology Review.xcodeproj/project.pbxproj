@@ -1,0 +1,290 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		032B6CA81535508300457D6C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 032B6CA71535508300457D6C /* UIKit.framework */; };
+		032B6CAA1535508300457D6C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 032B6CA91535508300457D6C /* Foundation.framework */; };
+		032B6CAC1535508300457D6C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 032B6CAB1535508300457D6C /* CoreGraphics.framework */; };
+		032B6CB21535508300457D6C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 032B6CB01535508300457D6C /* InfoPlist.strings */; };
+		032B6CB41535508300457D6C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 032B6CB31535508300457D6C /* main.m */; };
+		032B6CB81535508300457D6C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 032B6CB71535508300457D6C /* AppDelegate.m */; };
+		032B6CBB1535508300457D6C /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 032B6CB91535508300457D6C /* MainStoryboard.storyboard */; };
+		032B6CBE1535508300457D6C /* MasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 032B6CBD1535508300457D6C /* MasterViewController.m */; };
+		032B6CC11535508300457D6C /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 032B6CC01535508300457D6C /* DetailViewController.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		032B6CA31535508300457D6C /* Kinesiology Review.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Kinesiology Review.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		032B6CA71535508300457D6C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		032B6CA91535508300457D6C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		032B6CAB1535508300457D6C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		032B6CAF1535508300457D6C /* Kinesiology Review-Info.plist */ = {isa = PBXFileReference; path = "Kinesiology Review-Info.plist"; sourceTree = "<group>"; };
+		032B6CB11535508300457D6C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		032B6CB31535508300457D6C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		032B6CB51535508300457D6C /* Kinesiology Review-Prefix.pch */ = {isa = PBXFileReference; path = "Kinesiology Review-Prefix.pch"; sourceTree = "<group>"; };
+		032B6CB61535508300457D6C /* AppDelegate.h */ = {isa = PBXFileReference; path = AppDelegate.h; sourceTree = "<group>"; };
+		032B6CB71535508300457D6C /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		032B6CBA1535508300457D6C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
+		032B6CBC1535508300457D6C /* MasterViewController.h */ = {isa = PBXFileReference; path = MasterViewController.h; sourceTree = "<group>"; };
+		032B6CBD1535508300457D6C /* MasterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MasterViewController.m; sourceTree = "<group>"; };
+		032B6CBF1535508300457D6C /* DetailViewController.h */ = {isa = PBXFileReference; path = DetailViewController.h; sourceTree = "<group>"; };
+		032B6CC01535508300457D6C /* DetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		032B6CA01535508300457D6C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				032B6CA81535508300457D6C /* UIKit.framework in Frameworks */,
+				032B6CAA1535508300457D6C /* Foundation.framework in Frameworks */,
+				032B6CAC1535508300457D6C /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		032B6C981535508200457D6C = {
+			isa = PBXGroup;
+			children = (
+				032B6CAD1535508300457D6C /* Kinesiology Review */,
+				032B6CA61535508300457D6C /* Frameworks */,
+				032B6CA41535508300457D6C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		032B6CA41535508300457D6C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				032B6CA31535508300457D6C /* Kinesiology Review.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		032B6CA61535508300457D6C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				032B6CA71535508300457D6C /* UIKit.framework */,
+				032B6CA91535508300457D6C /* Foundation.framework */,
+				032B6CAB1535508300457D6C /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		032B6CAD1535508300457D6C /* Kinesiology Review */ = {
+			isa = PBXGroup;
+			children = (
+				032B6CB61535508300457D6C /* AppDelegate.h */,
+				032B6CB71535508300457D6C /* AppDelegate.m */,
+				032B6CB91535508300457D6C /* MainStoryboard.storyboard */,
+				032B6CBC1535508300457D6C /* MasterViewController.h */,
+				032B6CBD1535508300457D6C /* MasterViewController.m */,
+				032B6CBF1535508300457D6C /* DetailViewController.h */,
+				032B6CC01535508300457D6C /* DetailViewController.m */,
+				032B6CAE1535508300457D6C /* Supporting Files */,
+			);
+			path = "Kinesiology Review";
+			sourceTree = "<group>";
+		};
+		032B6CAE1535508300457D6C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				032B6CAF1535508300457D6C /* Kinesiology Review-Info.plist */,
+				032B6CB01535508300457D6C /* InfoPlist.strings */,
+				032B6CB31535508300457D6C /* main.m */,
+				032B6CB51535508300457D6C /* Kinesiology Review-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		032B6CA21535508300457D6C /* Kinesiology Review */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 032B6CC41535508300457D6C /* Build configuration list for PBXNativeTarget "Kinesiology Review" */;
+			buildPhases = (
+				032B6C9F1535508300457D6C /* Sources */,
+				032B6CA01535508300457D6C /* Frameworks */,
+				032B6CA11535508300457D6C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Kinesiology Review";
+			productName = "Kinesiology Review";
+			productReference = 032B6CA31535508300457D6C /* Kinesiology Review.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		032B6C9A1535508200457D6C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+				ORGANIZATIONNAME = "Calling All Crows";
+			};
+			buildConfigurationList = 032B6C9D1535508200457D6C /* Build configuration list for PBXProject "Kinesiology Review" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 032B6C981535508200457D6C;
+			productRefGroup = 032B6CA41535508300457D6C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				032B6CA21535508300457D6C /* Kinesiology Review */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		032B6CA11535508300457D6C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				032B6CB21535508300457D6C /* InfoPlist.strings in Resources */,
+				032B6CBB1535508300457D6C /* MainStoryboard.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		032B6C9F1535508300457D6C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				032B6CB41535508300457D6C /* main.m in Sources */,
+				032B6CB81535508300457D6C /* AppDelegate.m in Sources */,
+				032B6CBE1535508300457D6C /* MasterViewController.m in Sources */,
+				032B6CC11535508300457D6C /* DetailViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		032B6CB01535508300457D6C /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				032B6CB11535508300457D6C /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		032B6CB91535508300457D6C /* MainStoryboard.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				032B6CBA1535508300457D6C /* en */,
+			);
+			name = MainStoryboard.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		032B6CC21535508300457D6C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Debug;
+		};
+		032B6CC31535508300457D6C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 2;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		032B6CC51535508300457D6C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Kinesiology Review/Kinesiology Review-Prefix.pch";
+				INFOPLIST_FILE = "Kinesiology Review/Kinesiology Review-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		032B6CC61535508300457D6C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Kinesiology Review/Kinesiology Review-Prefix.pch";
+				INFOPLIST_FILE = "Kinesiology Review/Kinesiology Review-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		032B6C9D1535508200457D6C /* Build configuration list for PBXProject "Kinesiology Review" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				032B6CC21535508300457D6C /* Debug */,
+				032B6CC31535508300457D6C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		032B6CC41535508300457D6C /* Build configuration list for PBXNativeTarget "Kinesiology Review" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				032B6CC51535508300457D6C /* Debug */,
+				032B6CC61535508300457D6C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 032B6C9A1535508200457D6C /* Project object */;
+}
