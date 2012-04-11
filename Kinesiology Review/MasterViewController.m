@@ -72,12 +72,10 @@ NSInteger const levels = 0;	//For better readability below
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
 	return 2;
-	NSLog(@"Set number of sections");
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-	NSLog(@"Setting number of rows in section %d", section);
 	if (section == levels) {
 		return activitiesLists.count;
 	} else {
@@ -86,7 +84,6 @@ NSInteger const levels = 0;	//For better readability below
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    NSLog(@"Setting title for section %d", section);
 	if (section == levels) {
 		return @"Select Level";
 	} else {
@@ -98,7 +95,6 @@ NSInteger const levels = 0;	//For better readability below
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
 	
-	NSLog(@"Setting contents of cell %d in section %d", indexPath.row, indexPath.section);
 	if (indexPath.section == levels) {
 		cell.textLabel.text = [NSString stringWithFormat:@"Level %d", indexPath.row + 1];
     } else {
@@ -173,6 +169,8 @@ NSMutableArray *currentActivityLevels;	//The levels that the activity will be ad
 	} else if ([elementName isEqualToString:@"activity"]) {
 		currentActivity = [Activity new];
 	}
+	
+	currentValue = nil;
 }
 
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
@@ -194,8 +192,6 @@ NSMutableArray *currentActivityLevels;	//The levels that the activity will be ad
 	} else if ([elementName isEqualToString:@"level"]) {
 		NSInteger levelValue = currentValue.integerValue;
 		
-		NSLog(@"Looking at level element.  Level value is %d, level text is %@", levelValue, currentValue);
-		
 		//Make sure to add levels to array if it's not big enough already
 		while (activitiesLists.count < levelValue) {
 			//Array for new level to be added
@@ -207,7 +203,6 @@ NSMutableArray *currentActivityLevels;	//The levels that the activity will be ad
 			}
 			
 			[activitiesLists addObject:newLevel];
-			NSLog(@"Added level %d to activitiesList", activitiesLists.count);
 		}
 		
 		//And add the level to the list of levels the activity will belong to
