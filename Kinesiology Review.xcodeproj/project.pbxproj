@@ -16,6 +16,7 @@
 		032B6CBB1535508300457D6C /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 032B6CB91535508300457D6C /* MainStoryboard.storyboard */; };
 		032B6CBE1535508300457D6C /* MasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 032B6CBD1535508300457D6C /* MasterViewController.m */; };
 		032B6CC11535508300457D6C /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 032B6CC01535508300457D6C /* DetailViewController.m */; };
+		032B6CCE1535539A00457D6C /* Activity.m in Sources */ = {isa = PBXBuildFile; fileRef = 032B6CCD1535539A00457D6C /* Activity.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,8 @@
 		032B6CBD1535508300457D6C /* MasterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MasterViewController.m; sourceTree = "<group>"; };
 		032B6CBF1535508300457D6C /* DetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
 		032B6CC01535508300457D6C /* DetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
+		032B6CCC1535539A00457D6C /* Activity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Activity.h; sourceTree = "<group>"; };
+		032B6CCD1535539A00457D6C /* Activity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Activity.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,13 +83,15 @@
 		032B6CAD1535508300457D6C /* Kinesiology Review */ = {
 			isa = PBXGroup;
 			children = (
+				032B6CCC1535539A00457D6C /* Activity.h */,
+				032B6CCD1535539A00457D6C /* Activity.m */,
 				032B6CB61535508300457D6C /* AppDelegate.h */,
 				032B6CB71535508300457D6C /* AppDelegate.m */,
+				032B6CBF1535508300457D6C /* DetailViewController.h */,
+				032B6CC01535508300457D6C /* DetailViewController.m */,
 				032B6CB91535508300457D6C /* MainStoryboard.storyboard */,
 				032B6CBC1535508300457D6C /* MasterViewController.h */,
 				032B6CBD1535508300457D6C /* MasterViewController.m */,
-				032B6CBF1535508300457D6C /* DetailViewController.h */,
-				032B6CC01535508300457D6C /* DetailViewController.m */,
 				032B6CAE1535508300457D6C /* Supporting Files */,
 			);
 			path = "Kinesiology Review";
@@ -130,7 +135,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0430;
-				ORGANIZATIONNAME = "Calling All Crows";
+				ORGANIZATIONNAME = "";
 			};
 			buildConfigurationList = 032B6C9D1535508200457D6C /* Build configuration list for PBXProject "Kinesiology Review" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -170,6 +175,7 @@
 				032B6CB81535508300457D6C /* AppDelegate.m in Sources */,
 				032B6CBE1535508300457D6C /* MasterViewController.m in Sources */,
 				032B6CC11535508300457D6C /* DetailViewController.m in Sources */,
+				032B6CCE1535539A00457D6C /* Activity.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -283,6 +289,7 @@
 				032B6CC61535508300457D6C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
