@@ -9,6 +9,8 @@
 
 #import "DetailViewController.h"
 
+#import "Activity.h"
+
 @interface MasterViewController () {
     NSMutableArray *_objects;
 }
@@ -16,8 +18,7 @@
 
 @implementation MasterViewController
 
-@synthesize detailViewController = _detailViewController;
-@synthesize selectedActivities;
+@synthesize detailViewController = _detailViewController, selectedActivities;
 
 NSMutableArray *activitiesLists;	//Array of arrays of activities
 NSMutableArray *domainTitles;	//Names of each domain
@@ -40,6 +41,9 @@ NSInteger const levels = 0;	//For better readability below
 	UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
 	self.navigationItem.rightBarButtonItem = addButton;
 	self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
+	NSXMLParser *parser = [[NSXMLParser alloc] initWithContentsOfURL:[NSURL URLWithString:@"http://dl.dropbox.com/u/2037194/sample-input.xml"]];
+	[parser setDelegate:self];
+	[parser parse];
 }
 
 - (void)viewDidUnload
@@ -68,10 +72,12 @@ NSInteger const levels = 0;	//For better readability below
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
 	return 2;
+	NSLog(@"Set number of sections");
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+	NSLog(@"Setting number of rows in section %d", section);
 	if (section == levels) {
 		return activitiesLists.count;
 	} else {
@@ -80,7 +86,8 @@ NSInteger const levels = 0;	//For better readability below
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    if (section == levels) {
+    NSLog(@"Setting title for section %d", section);
+	if (section == levels) {
 		return @"Select Level";
 	} else {
 		return @"Select Domain";
@@ -91,6 +98,7 @@ NSInteger const levels = 0;	//For better readability below
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
 	
+	NSLog(@"Setting contents of cell %d in section %d", indexPath.row, indexPath.section);
 	if (indexPath.section == levels) {
 		cell.textLabel.text = [NSString stringWithFormat:@"Level %d", indexPath.row + 1];
     } else {
@@ -148,6 +156,99 @@ NSInteger const levels = 0;	//For better readability below
 			[tableView deselectRowAtIndexPath:otherIndexPath animated:NO];
 		}
 	}
+}
+
+
+
+//XML Parsing
+
+Activity *currentActivity;	//The activity being added
+NSMutableString *currentValue;	//The value of the current element being read
+NSMutableArray *currentActivityLevels;	//The levels that the activity will be added to.  This is an array rather than just a number in case it will be added to multiple levels.
+
+- (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
+	
+	if ([elementName isEqualToString:@"activities"]) {
+		activitiesLists = [NSMutableArray new];
+	} else if ([elementName isEqualToString:@"activity"]) {
+		currentActivity = [Activity new];
+	}
+}
+
+- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
+    if (!currentValue) {
+        currentValue = [NSMutableString new];
+    }
+    [currentValue appendString:string];
+}
+
+- (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
+	
+	if ([elementName isEqualToString:@"activity"]) {
+		currentActivity = nil;
+		currentActivityLevels = nil;
+	} else if ([elementName isEqualToString:@"title"]) {
+		currentActivity.title = currentValue;
+	} else if ([elementName isEqualToString:@"description"]) {
+		currentActivity.description = currentValue;
+	} else if ([elementName isEqualToString:@"level"]) {
+		NSInteger levelValue = currentValue.integerValue;
+		
+		NSLog(@"Looking at level element.  Level value is %d, level text is %@", levelValue, currentValue);
+		
+		//Make sure to add levels to array if it's not big enough already
+		while (activitiesLists.count < levelValue) {
+			//Array for new level to be added
+			NSMutableArray *newLevel = [NSMutableArray new];
+			
+			//Fill array with arrays for each domain so far
+			for (NSInteger i = 0; i < domainTitles.count; i++) {
+				[newLevel addObject:[NSMutableArray new]];
+			}
+			
+			[activitiesLists addObject:newLevel];
+			NSLog(@"Added level %d to activitiesList", activitiesLists.count);
+		}
+		
+		//And add the level to the list of levels the activity will belong to
+		[currentActivityLevels addObject:[NSNumber numberWithInteger:levelValue]];
+	} else if ([elementName isEqualToString:@"domain"]) {
+		Boolean newDomain = YES;
+		NSInteger domainIndex;
+		
+		//Check if domain is already in list
+		for (NSInteger i = 0; i < domainTitles.count; i++) {
+			if ([[domainTitles objectAtIndex:i] isEqualToString:currentValue]) {
+				newDomain = NO;
+				domainIndex = i;
+				break;
+			}
+		}
+		
+		//If it's not, add it
+		if (newDomain) {
+			domainIndex = domainTitles.count;
+			[domainTitles addObject:currentValue];
+			
+			//And add it to each level
+			for (NSInteger i = 0; i < activitiesLists.count; i++) {
+				[[activitiesLists objectAtIndex:i] addObject:[NSMutableArray new]];
+			}
+		}
+		
+		//Then add activity into the lists, as long as it's not already there
+		for (NSInteger i = 0; i < currentActivityLevels.count; i++) {
+			
+			//The array of activities for the given level and domain
+			NSMutableArray *domainActivities = [activitiesLists objectAtIndex:[(NSNumber *)[currentActivityLevels objectAtIndex:i] intValue]];
+			
+			if (![domainActivities containsObject:currentActivity]) {
+				[domainActivities addObject:currentActivity];
+			}
+		}
+	}
+	
+	currentValue = nil;
 }
 
 @end
