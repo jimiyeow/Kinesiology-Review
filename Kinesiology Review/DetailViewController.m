@@ -26,7 +26,8 @@
 
 #pragma mark - Managing the detail item
 
-Activity *currentActivity;
+//The activity being displayed onscreen
+Activity *displayedActivity;
 
 - (void)setDetailItem:(id)newDetailItem
 {
@@ -50,10 +51,11 @@ Activity *currentActivity;
 	    self.detailDescriptionLabel.text = [self.detailItem description];
 	}
 	
-	if (selectedActivities) {
-		_activityTitle.text = currentActivity.title;
+	//If there is a current activity, display it
+	if (displayedActivity) {
+		_activityTitle.text = displayedActivity.title;
 		_activitiesList.text = selectedListTitle;
-		_description.text = currentActivity.description;
+		_description.text = displayedActivity.description;
 	}
 }
 
@@ -95,8 +97,9 @@ Activity *currentActivity;
     self.masterPopoverController = nil;
 }
 
+//When user hits "Next!" button, load and display the next activity
 - (IBAction)nextActivity:(UIBarButtonItem *)sender {
-	currentActivity = [selectedActivities objectAtIndex:(arc4random() % selectedActivities.count)];
+	displayedActivity = [selectedActivities objectAtIndex:(arc4random() % selectedActivities.count)];
 	[self configureView];
 }
 @end

@@ -20,10 +20,10 @@
 
 @synthesize detailViewController = _detailViewController;
 
-NSMutableArray *activitiesLists;	//Array of arrays of activities
+NSMutableArray *activitiesLists;	//Array of arrays of activities (first dimension is level, second is domain)
 NSMutableArray *domainTitles;	//Names of each domain
 NSInteger level = -1, domain = -1;	//Indexes of selections in each section
-NSInteger const levels = 0;	//For better readability below
+NSInteger const levels = 0;	//Just for better readability below
 
 - (void)awakeFromNib
 {
@@ -38,6 +38,7 @@ NSInteger const levels = 0;	//For better readability below
 	// Do any additional setup after loading the view, typically from a nib.
 	self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
 	
+	//Load the activities list from the external XML file
 	NSXMLParser *parser = [[NSXMLParser alloc] initWithContentsOfURL:[NSURL URLWithString:@"http://dl.dropbox.com/u/2037194/sample-input.xml"]];
 	domainTitles = [NSMutableArray new];
 	[parser setDelegate:self];
@@ -67,6 +68,7 @@ NSInteger const levels = 0;	//For better readability below
 
 #pragma mark - Table View
 
+//2 sections, one for level, and one for domain
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
 	return 2;
@@ -134,19 +136,23 @@ NSInteger const levels = 0;	//For better readability below
  }
  */
 
+//Method is called when user selects one of the options
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section == levels) {
+    //Take note of which option was chosen
+	if (indexPath.section == levels) {
 		level = indexPath.row;
 	} else {
 		domain = indexPath.row;
 	}
 	
+	//If both options have been chosen, update selected activities variable and list title
 	if (level != -1 && domain != -1) {
 		_detailViewController.selectedActivities = [[activitiesLists objectAtIndex:level] objectAtIndex:domain];
 		_detailViewController.selectedListTitle = [NSString stringWithFormat:@"Level %d — %@", level + 1, [domainTitles objectAtIndex:domain]];
 	}
 	
+	//And deselect other options in the section
 	for (NSInteger i = 0; i < [tableView numberOfRowsInSection:indexPath.section]; i++) {
 		if (i != indexPath.row) {
 			NSIndexPath *otherIndexPath = [NSIndexPath indexPathForRow:i inSection:indexPath.section];
@@ -161,45 +167,54 @@ NSInteger const levels = 0;	//For better readability below
 
 Activity *currentActivity;	//The activity being added
 NSMutableString *currentString;	//The value of the current element being read
-NSMutableArray *currentActivityLevels;	//The levels that the activity will be added to.  This is an array rather than just a number in case it will be added to multiple levels.
-NSMutableArray *currentDomains;
 
+//The levels and domains that the activity will be added to.  These are arrays rather than just numbers in case it will be added to multiple levels and domains.
+NSMutableArray *currentActivityLevels, *currentDomains;
+
+//Method called when starting to read XML element
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
 	
 	if ([elementName isEqualToString:@"activities"]) {
+		//Initialize activities lists
 		activitiesLists = [NSMutableArray new];
 	} else if ([elementName isEqualToString:@"activity"]) {
+		//Create new activity and reset variable for which levels and domains it will go to
 		currentActivity = [Activity new];
 		currentActivityLevels = [NSMutableArray new];
 		currentDomains = [NSMutableArray new];
 	}
 	
+	//Restart the current string
 	currentString = [NSMutableString new];
 }
 
+//Keep track of the value of the current XML element being read
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
     [currentString appendString:string];
 }
 
+//Method called when finishing reading an XML element
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
 	
 	if ([elementName isEqualToString:@"activity"]) {
-		//This doesn't seem like it should be necessary, but retrieving titles from arrays keeps adding whitespace, so this is used to trim them for comparison
+		//Add activity to appropriate lists
+		
+		//This doesn't seem like it should be necessary, but retrieving titles from arrays keeps adding whitespace, so this object is used to trim them for accurate comparison
 		NSCharacterSet *trimCharacters = [NSCharacterSet whitespaceAndNewlineCharacterSet];
 		
-		for (NSInteger j = 0; j < currentDomains.count; j++) {
-			NSString *domainTitle = [[currentDomains objectAtIndex:j] stringByTrimmingCharactersInSet:trimCharacters];
+		for (NSInteger currentDomainIndex = 0; currentDomainIndex < currentDomains.count; currentDomainIndex++) {
+			NSString *currentDomainTitle = [[currentDomains objectAtIndex:currentDomainIndex] stringByTrimmingCharactersInSet:trimCharacters];
 			
-			Boolean newDomain = YES;
-			NSInteger domainIndex;
+			Boolean newDomain = YES;	//Whether the domain is new or already in the lists
+			NSInteger domainIndex;	//The index in the activity lists of the domain
 			
 			//Check if domain is already in list
-			for (NSInteger i = 0; i < domainTitles.count; i++) {
-				NSString *compareTitle = [[domainTitles objectAtIndex:i] stringByTrimmingCharactersInSet:trimCharacters];
+			for (NSInteger comparedDomainIndex = 0; comparedDomainIndex < domainTitles.count; comparedDomainIndex++) {
+				NSString *comparedTitle = [[domainTitles objectAtIndex:comparedDomainIndex] stringByTrimmingCharactersInSet:trimCharacters];
 				
-				if ([compareTitle isEqualToString:domainTitle]) {
+				if ([comparedTitle isEqualToString:currentDomainTitle]) {
 					newDomain = NO;
-					domainIndex = i;
+					domainIndex = comparedDomainIndex;
 					break;
 				}
 			}
@@ -207,32 +222,29 @@ NSMutableArray *currentDomains;
 			//If it's not, add it
 			if (newDomain) {
 				domainIndex = domainTitles.count;
-				[domainTitles addObject:domainTitle];
+				[domainTitles addObject:currentDomainTitle];
 				
 				//And add it to each level
-				for (NSInteger i = 0; i < activitiesLists.count; i++) {
-					[[activitiesLists objectAtIndex:i] addObject:[NSMutableArray new]];
+				for (NSInteger levelIndex = 0; levelIndex < activitiesLists.count; levelIndex++) {
+					[[activitiesLists objectAtIndex:levelIndex] addObject:[NSMutableArray new]];
 				}
 			}
 			
 			//Then add activity into the lists, as long as it's not already there
-			
 			for (NSInteger i = 0; i < currentActivityLevels.count; i++) {
 				
+				//Level activity will be added to
 				NSInteger activityLevel = [(NSNumber *)[currentActivityLevels objectAtIndex:i] integerValue];
 				
+				//Activities list activity will be added to
 				NSMutableArray *domainActivities = [[activitiesLists objectAtIndex:activityLevel - 1] objectAtIndex:domainIndex];
 				
+				//Make sure it's not already in list, and then add it
 				if (![domainActivities containsObject:currentActivity]) {
 					[domainActivities addObject:currentActivity];
 				}
 			}
 		}
-		
-		
-		currentActivity = nil;
-		currentActivityLevels = nil;
-		currentDomains = nil;
 	} else if ([elementName isEqualToString:@"title"]) {
 		currentActivity.title = currentString;
 	} else if ([elementName isEqualToString:@"description"]) {
@@ -245,7 +257,7 @@ NSMutableArray *currentDomains;
 			//Array for new level to be added
 			NSMutableArray *newLevel = [NSMutableArray new];
 			
-			//Fill array with arrays for each domain so far
+			//Fill levl array with arrays for each domain so far
 			for (NSInteger i = 0; i < domainTitles.count; i++) {
 				[newLevel addObject:[NSMutableArray new]];
 			}
