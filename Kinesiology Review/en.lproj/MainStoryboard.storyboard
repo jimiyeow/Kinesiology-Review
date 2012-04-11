@@ -43,7 +43,10 @@
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" title="Detail" id="53"/>
+                    <navigationItem key="navigationItem" title="Kinesiology Review" id="53">
+                        <barButtonItem key="backBarButtonItem" title="Previous Activity" id="T0a-PF-xtK"/>
+                        <barButtonItem key="rightBarButtonItem" title="Next!" id="QZ9-Jn-Edd"/>
+                    </navigationItem>
                     <connections>
                         <outlet property="detailDescriptionLabel" destination="27" id="29"/>
                     </connections>
