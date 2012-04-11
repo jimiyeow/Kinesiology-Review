@@ -41,6 +41,8 @@ NSInteger const levels = 0;	//For better readability below
 	UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
 	self.navigationItem.rightBarButtonItem = addButton;
 	self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
+	
+	domainTitles = [NSMutableArray new];
 	NSXMLParser *parser = [[NSXMLParser alloc] initWithContentsOfURL:[NSURL URLWithString:@"http://dl.dropbox.com/u/2037194/sample-input.xml"]];
 	[parser setDelegate:self];
 	[parser parse];
@@ -99,6 +101,7 @@ NSInteger const levels = 0;	//For better readability below
 		cell.textLabel.text = [NSString stringWithFormat:@"Level %d", indexPath.row + 1];
     } else {
 		cell.textLabel.text = [domainTitles objectAtIndex:indexPath.row];
+		NSLog(@"Set domain row %d label to %@", indexPath.row, [domainTitles objectAtIndex:indexPath.row]);
 	}
 	
 	return cell;
@@ -170,13 +173,10 @@ NSMutableArray *currentActivityLevels;	//The levels that the activity will be ad
 		currentActivity = [Activity new];
 	}
 	
-	currentValue = nil;
+	currentValue = [NSMutableString new];
 }
 
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
-    if (!currentValue) {
-        currentValue = [NSMutableString new];
-    }
     [currentValue appendString:string];
 }
 
@@ -234,16 +234,15 @@ NSMutableArray *currentActivityLevels;	//The levels that the activity will be ad
 		//Then add activity into the lists, as long as it's not already there
 		for (NSInteger i = 0; i < currentActivityLevels.count; i++) {
 			
-			//The array of activities for the given level and domain
-			NSMutableArray *domainActivities = [activitiesLists objectAtIndex:[(NSNumber *)[currentActivityLevels objectAtIndex:i] intValue]];
+			NSInteger activityLevel = [(NSNumber *)[currentActivityLevels objectAtIndex:i] integerValue];
+			
+			NSMutableArray *domainActivities = [[activitiesLists objectAtIndex:activityLevel] objectAtIndex:domainIndex];
 			
 			if (![domainActivities containsObject:currentActivity]) {
 				[domainActivities addObject:currentActivity];
 			}
 		}
 	}
-	
-	currentValue = nil;
 }
 
 @end
