@@ -77,7 +77,7 @@
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" title="Kinesiology Review" id="53"/>
+                    <navigationItem key="navigationItem" title="Kinesiology Review Activities" id="53"/>
                     <connections>
                         <outlet property="activitiesList" destination="RfK-3s-al7" id="wOi-Jx-cDb"/>
                         <outlet property="activityTitle" destination="8C5-7W-gdz" id="MAg-Mh-vY6"/>
