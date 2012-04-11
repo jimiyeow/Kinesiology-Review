@@ -9,8 +9,11 @@
 
 @class DetailViewController;
 
-@interface MasterViewController : UITableViewController
+@interface MasterViewController : UITableViewController {
+	NSMutableArray *selectedActivities;	//Pretty self-explanatory
+}
 
 @property (strong, nonatomic) DetailViewController *detailViewController;
+@property NSMutableArray *selectedActivities;
 
 @end

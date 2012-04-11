@@ -17,6 +17,12 @@
 @implementation MasterViewController
 
 @synthesize detailViewController = _detailViewController;
+@synthesize selectedActivities;
+
+NSMutableArray *activitiesLists;	//Array of arrays of activities
+NSMutableArray *domainTitles;	//Names of each domain
+NSInteger level, domain;	//Indexes of selections in each section
+NSInteger const levels = 0;	//For better readability below
 
 - (void)awakeFromNib
 {
@@ -30,7 +36,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
 	self.navigationItem.leftBarButtonItem = self.editButtonItem;
-
+	
 	UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
 	self.navigationItem.rightBarButtonItem = addButton;
 	self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
@@ -61,27 +67,43 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-	return 1;
+	return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-	return _objects.count;
+	if (section == levels) {
+		return activitiesLists.count;
+	} else {
+		return ((NSMutableArray *)[activitiesLists objectAtIndex:0]).count;
+	}
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    if (section == levels) {
+		return @"Select Level";
+	} else {
+		return @"Select Domain";
+	}
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
-
-	NSDate *object = [_objects objectAtIndex:indexPath.row];
-	cell.textLabel.text = [object description];
-    return cell;
+	
+	if (indexPath.section == levels) {
+		cell.textLabel.text = [NSString stringWithFormat:@"Level %d", indexPath.row + 1];
+    } else {
+		cell.textLabel.text = [domainTitles objectAtIndex:indexPath.row];
+	}
+	
+	return cell;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Return NO if you do not want the specified item to be editable.
-    return YES;
+    return NO;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -95,25 +117,37 @@
 }
 
 /*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
+ // Override to support rearranging the table view.
+ - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
+ {
+ }
+ */
 
 /*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
+ // Override to support conditional rearranging of the table view.
+ - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ // Return NO if you do not want the item to be re-orderable.
+ return YES;
+ }
+ */
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSDate *object = [_objects objectAtIndex:indexPath.row];
-    self.detailViewController.detailItem = object;
+    if (indexPath.section == levels) {
+		level = indexPath.row;
+	} else {
+		domain = indexPath.row;
+	}
+	
+	selectedActivities = [[activitiesLists objectAtIndex:level] objectAtIndex:domain];
+	
+	for (NSInteger i = 0; i < [tableView numberOfRowsInSection:indexPath.section]; i++) {
+		if (i != indexPath.row) {
+			NSIndexPath *otherIndexPath = [NSIndexPath indexPathForRow:i inSection:indexPath.section];
+			[tableView deselectRowAtIndexPath:otherIndexPath animated:NO];
+		}
+	}
 }
 
 @end
