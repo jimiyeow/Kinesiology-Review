@@ -7,6 +7,8 @@
 
 #import "DetailViewController.h"
 
+#import "Activity.h"
+
 @interface DetailViewController ()
 @property (strong, nonatomic) UIPopoverController *masterPopoverController;
 - (void)configureView;
@@ -16,9 +18,15 @@
 
 @synthesize detailItem = _detailItem;
 @synthesize detailDescriptionLabel = _detailDescriptionLabel;
+@synthesize activityTitle = _activityTitle;
+@synthesize activitiesList = _activitiesList;
+@synthesize description = _description;
 @synthesize masterPopoverController = _masterPopoverController;
+@synthesize selectedActivities, selectedListTitle;
 
 #pragma mark - Managing the detail item
+
+Activity *currentActivity;
 
 - (void)setDetailItem:(id)newDetailItem
 {
@@ -41,6 +49,12 @@
 	if (self.detailItem) {
 	    self.detailDescriptionLabel.text = [self.detailItem description];
 	}
+	
+	if (selectedActivities) {
+		_activityTitle.text = currentActivity.title;
+		_activitiesList.text = selectedListTitle;
+		_description.text = currentActivity.description;
+	}
 }
 
 - (void)viewDidLoad
@@ -52,6 +66,9 @@
 
 - (void)viewDidUnload
 {
+	[self setActivityTitle:nil];
+	[self setActivitiesList:nil];
+	[self setDescription:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 	self.detailDescriptionLabel = nil;
@@ -78,4 +95,8 @@
     self.masterPopoverController = nil;
 }
 
+- (IBAction)nextActivity:(UIBarButtonItem *)sender {
+	currentActivity = [selectedActivities objectAtIndex:(arc4random() % selectedActivities.count)];
+	[self configureView];
+}
 @end

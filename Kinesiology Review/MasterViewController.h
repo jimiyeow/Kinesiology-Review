@@ -9,11 +9,8 @@
 
 @class DetailViewController;
 
-@interface MasterViewController : UITableViewController <NSXMLParserDelegate> {
-	NSMutableArray *selectedActivities;	//Pretty self-explanatory
-}
+@interface MasterViewController : UITableViewController <NSXMLParserDelegate>
 
 @property (strong, nonatomic) DetailViewController *detailViewController;
-@property NSMutableArray *selectedActivities;
 
 @end

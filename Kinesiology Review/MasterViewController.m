@@ -18,7 +18,7 @@
 
 @implementation MasterViewController
 
-@synthesize detailViewController = _detailViewController, selectedActivities;
+@synthesize detailViewController = _detailViewController;
 
 NSMutableArray *activitiesLists;	//Array of arrays of activities
 NSMutableArray *domainTitles;	//Names of each domain
@@ -142,7 +142,8 @@ NSInteger const levels = 0;	//For better readability below
 		domain = indexPath.row;
 	}
 	
-	selectedActivities = [[activitiesLists objectAtIndex:level] objectAtIndex:domain];
+	_detailViewController.selectedActivities = [[activitiesLists objectAtIndex:level] objectAtIndex:domain];
+	_detailViewController.selectedListTitle = [NSString stringWithFormat:@"Level %d — %@", level + 1, [domainTitles objectAtIndex:domain]];
 	
 	for (NSInteger i = 0; i < [tableView numberOfRowsInSection:indexPath.section]; i++) {
 		if (i != indexPath.row) {
@@ -166,6 +167,7 @@ NSMutableArray *currentActivityLevels;	//The levels that the activity will be ad
 		activitiesLists = [NSMutableArray new];
 	} else if ([elementName isEqualToString:@"activity"]) {
 		currentActivity = [Activity new];
+		currentActivityLevels = [NSMutableArray new];
 	}
 	
 	currentString = [NSMutableString new];
@@ -231,11 +233,12 @@ NSMutableArray *currentActivityLevels;	//The levels that the activity will be ad
 		}
 		
 		//Then add activity into the lists, as long as it's not already there
+		
 		for (NSInteger i = 0; i < currentActivityLevels.count; i++) {
 			
 			NSInteger activityLevel = [(NSNumber *)[currentActivityLevels objectAtIndex:i] integerValue];
 			
-			NSMutableArray *domainActivities = [[activitiesLists objectAtIndex:activityLevel] objectAtIndex:domainIndex];
+			NSMutableArray *domainActivities = [[activitiesLists objectAtIndex:activityLevel - 1] objectAtIndex:domainIndex];
 			
 			if (![domainActivities containsObject:currentActivity]) {
 				[domainActivities addObject:currentActivity];
