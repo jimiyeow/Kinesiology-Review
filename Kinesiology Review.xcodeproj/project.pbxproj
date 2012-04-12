@@ -20,7 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		032B6CA31535508300457D6C /* Kinesiology Review.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Kinesiology Review.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		032B6CA31535508300457D6C /* Kinesiology.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kinesiology.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		032B6CA71535508300457D6C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		032B6CA91535508300457D6C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		032B6CAB1535508300457D6C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -65,7 +65,7 @@
 		032B6CA41535508300457D6C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				032B6CA31535508300457D6C /* Kinesiology Review.app */,
+				032B6CA31535508300457D6C /* Kinesiology.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -125,7 +125,7 @@
 			);
 			name = "Kinesiology Review";
 			productName = "Kinesiology Review";
-			productReference = 032B6CA31535508300457D6C /* Kinesiology Review.app */;
+			productReference = 032B6CA31535508300457D6C /* Kinesiology.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -254,7 +254,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Kinesiology Review/Kinesiology Review-Prefix.pch";
 				INFOPLIST_FILE = "Kinesiology Review/Kinesiology Review-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Kinesiology;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -265,7 +265,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Kinesiology Review/Kinesiology Review-Prefix.pch";
 				INFOPLIST_FILE = "Kinesiology Review/Kinesiology Review-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Kinesiology;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
