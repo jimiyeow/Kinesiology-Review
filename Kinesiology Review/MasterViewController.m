@@ -39,10 +39,7 @@ NSInteger const levels = 0;	//Just for better readability below
 	self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
 	
 	//Load the activities list from the external XML file
-	NSXMLParser *parser = [[NSXMLParser alloc] initWithContentsOfURL:[NSURL URLWithString:@"http://dl.dropbox.com/u/2037194/sample-input.xml"]];
-	domainTitles = [NSMutableArray new];
-	[parser setDelegate:self];
-	[parser parse];
+	[self refreshActivities];
 }
 
 - (void)viewDidUnload
@@ -146,11 +143,7 @@ NSInteger const levels = 0;	//Just for better readability below
 		domain = indexPath.row;
 	}
 	
-	//If both options have been chosen, update selected activities variable and list title
-	if (level != -1 && domain != -1) {
-		_detailViewController.selectedActivities = [[activitiesLists objectAtIndex:level] objectAtIndex:domain];
-		_detailViewController.selectedListTitle = [NSString stringWithFormat:@"Level %d — %@", level + 1, [domainTitles objectAtIndex:domain]];
-	}
+	[self setCurrentActivities];
 	
 	//And deselect other options in the section
 	for (NSInteger i = 0; i < [tableView numberOfRowsInSection:indexPath.section]; i++) {
@@ -158,6 +151,25 @@ NSInteger const levels = 0;	//Just for better readability below
 			NSIndexPath *otherIndexPath = [NSIndexPath indexPathForRow:i inSection:indexPath.section];
 			[tableView deselectRowAtIndexPath:otherIndexPath animated:NO];
 		}
+	}
+}
+
+//This method handles refreshing the activities list
+- (void)refreshActivities
+{
+	NSXMLParser *parser = [[NSXMLParser alloc] initWithContentsOfURL:[NSURL URLWithString:@"http://dl.dropbox.com/u/2037194/sample-input.xml"]];
+	domainTitles = [NSMutableArray new];
+	[parser setDelegate:self];
+	[parser parse];
+	[self setCurrentActivities];
+}
+
+////If both options have been chosen, update selected activities variable and list title
+- (void)setCurrentActivities
+{
+	if (level != -1 && domain != -1) {
+		_detailViewController.selectedActivities = [[activitiesLists objectAtIndex:level] objectAtIndex:domain];
+		_detailViewController.selectedListTitle = [NSString stringWithFormat:@"Level %d — %@", level + 1, [domainTitles objectAtIndex:domain]];
 	}
 }
 
