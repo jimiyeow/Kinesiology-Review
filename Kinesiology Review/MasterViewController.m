@@ -178,11 +178,14 @@ NSMutableArray *currentActivityLevels, *currentDomains;
 		_detailViewController.selectedListTitle = [NSString stringWithFormat:@"Level %d — %@", level + 1, [domainTitles objectAtIndex:domain]];
 	}
 	
-	//And deselect other options in the section
+	[tableView cellForRowAtIndexPath:indexPath].accessoryType = UITableViewCellAccessoryCheckmark;
+	[tableView deselectRowAtIndexPath:indexPath animated:YES];
+	
+	//And uncheck other options in the section
 	for (NSInteger i = 0; i < [tableView numberOfRowsInSection:indexPath.section]; i++) {
 		if (i != indexPath.row) {
 			NSIndexPath *otherIndexPath = [NSIndexPath indexPathForRow:i inSection:indexPath.section];
-			[tableView deselectRowAtIndexPath:otherIndexPath animated:NO];
+			[tableView cellForRowAtIndexPath:otherIndexPath].accessoryType = UITableViewCellAccessoryNone;
 		}
 	}
 }
