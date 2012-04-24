@@ -41,9 +41,12 @@ NSInteger const levels = 0;	//Just for better readability below
 	self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
 	
 	//Load the activities list from the external XML file
-	[self refreshActivities];
-	
+	if ([self refreshActivities]) {
 	_selectInstructions.text = @"Choose a level and domain:";
+	}
+	else {
+		_selectInstructions.text = @"Activities list couldn't be read.";
+	}
 }
 
 - (void)viewDidUnload
