@@ -17,6 +17,8 @@
 @end
 
 @implementation MasterViewController
+@synthesize selectInstructions = _selectInstructions;
+@synthesize refreshingIndicator = _refreshingIndicator;
 
 @synthesize detailViewController = _detailViewController;
 
@@ -40,10 +42,14 @@ NSInteger const levels = 0;	//Just for better readability below
 	
 	//Load the activities list from the external XML file
 	[self refreshActivities];
+	
+	_selectInstructions.text = @"Choose a level and domain:";
 }
 
 - (void)viewDidUnload
 {
+	[self setSelectInstructions:nil];
+	[self setRefreshingIndicator:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -82,9 +88,9 @@ NSInteger const levels = 0;	//Just for better readability below
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	if (section == levels) {
-		return @"Select Level";
+		return @"Level";
 	} else {
-		return @"Select Domain";
+		return @"Domain";
 	}
 }
 
@@ -143,7 +149,11 @@ NSInteger const levels = 0;	//Just for better readability below
 		domain = indexPath.row;
 	}
 	
-	[self setCurrentActivities];
+	if (level != -1 && domain != -1) {
+		_selectInstructions.hidden = YES;
+		_detailViewController.selectedActivities = [[activitiesLists objectAtIndex:level] objectAtIndex:domain];
+		_detailViewController.selectedListTitle = [NSString stringWithFormat:@"Level %d — %@", level + 1, [domainTitles objectAtIndex:domain]];
+	}
 	
 	//And deselect other options in the section
 	for (NSInteger i = 0; i < [tableView numberOfRowsInSection:indexPath.section]; i++) {
@@ -154,14 +164,29 @@ NSInteger const levels = 0;	//Just for better readability below
 	}
 }
 
-//This method handles refreshing the activities list
-- (void)refreshActivities
+//This method handles refreshing the activities list, and returns whether activities list was successfully refreshed
+- (BOOL)refreshActivities
 {
+	[_refreshingIndicator startAnimating];
 	NSXMLParser *parser = [[NSXMLParser alloc] initWithContentsOfURL:[NSURL URLWithString:@"http://dl.dropbox.com/u/2037194/sample-input.xml"]];
-	domainTitles = [NSMutableArray new];
-	[parser setDelegate:self];
-	[parser parse];
-	[self setCurrentActivities];
+	
+	//If statements should make it so that it only refreshes if it successfully connects to and parses an XML document
+	if (parser != nil) {
+		[parser setDelegate:self];
+		if ([parser parse]) {
+			activitiesLists = newActivitiesLists;
+			domainTitles = newDomainTitles;
+			[self.tableView reloadData];	//Refreshes list of levels and domains
+			_detailViewController.selectedActivities = nil;
+			_detailViewController.selectedListTitle = nil;
+			level = -1;
+			domain = -1;
+			[_refreshingIndicator stopAnimating];
+			return YES;
+		}
+	}
+	[_refreshingIndicator stopAnimating];
+	return NO;
 }
 
 ////If both options have been chosen, update selected activities variable and list title
@@ -173,10 +198,23 @@ NSInteger const levels = 0;	//Just for better readability below
 	}
 }
 
+//Called when refresh button is hit
+- (IBAction)refresh:(UIBarButtonItem *)sender {
+	if ([self refreshActivities]) {
+		_selectInstructions.text = @"Activities refreshed!  Choose a level and domain:";
+	} else {
+		_selectInstructions.text = @"Activities couldn't be refreshed.";
+	}
+	
+	_selectInstructions.hidden = NO;
+}
+
 
 
 //XML Parsing
 
+NSMutableArray *newActivitiesLists;	//The new list being populated
+NSMutableArray *newDomainTitles;	//The new list of domain titles
 Activity *currentActivity;	//The activity being added
 NSMutableString *currentString;	//The value of the current element being read
 
@@ -188,7 +226,8 @@ NSMutableArray *currentActivityLevels, *currentDomains;
 	
 	if ([elementName isEqualToString:@"activities"]) {
 		//Initialize activities lists
-		activitiesLists = [NSMutableArray new];
+		newActivitiesLists = [NSMutableArray new];
+		newDomainTitles = [NSMutableArray new];
 	} else if ([elementName isEqualToString:@"activity"]) {
 		//Create new activity and reset variable for which levels and domains it will go to
 		currentActivity = [Activity new];
@@ -221,8 +260,8 @@ NSMutableArray *currentActivityLevels, *currentDomains;
 			NSInteger domainIndex;	//The index in the activity lists of the domain
 			
 			//Check if domain is already in list
-			for (NSInteger comparedDomainIndex = 0; comparedDomainIndex < domainTitles.count; comparedDomainIndex++) {
-				NSString *comparedTitle = [[domainTitles objectAtIndex:comparedDomainIndex] stringByTrimmingCharactersInSet:trimCharacters];
+			for (NSInteger comparedDomainIndex = 0; comparedDomainIndex < newDomainTitles.count; comparedDomainIndex++) {
+				NSString *comparedTitle = [[newDomainTitles objectAtIndex:comparedDomainIndex] stringByTrimmingCharactersInSet:trimCharacters];
 				
 				if ([comparedTitle isEqualToString:currentDomainTitle]) {
 					newDomain = NO;
@@ -233,12 +272,12 @@ NSMutableArray *currentActivityLevels, *currentDomains;
 			
 			//If it's not, add it
 			if (newDomain) {
-				domainIndex = domainTitles.count;
-				[domainTitles addObject:currentDomainTitle];
+				domainIndex = newDomainTitles.count;
+				[newDomainTitles addObject:currentDomainTitle];
 				
 				//And add it to each level
-				for (NSInteger levelIndex = 0; levelIndex < activitiesLists.count; levelIndex++) {
-					[[activitiesLists objectAtIndex:levelIndex] addObject:[NSMutableArray new]];
+				for (NSInteger levelIndex = 0; levelIndex < newActivitiesLists.count; levelIndex++) {
+					[[newActivitiesLists objectAtIndex:levelIndex] addObject:[NSMutableArray new]];
 				}
 			}
 			
@@ -249,7 +288,7 @@ NSMutableArray *currentActivityLevels, *currentDomains;
 				NSInteger activityLevel = [(NSNumber *)[currentActivityLevels objectAtIndex:i] integerValue];
 				
 				//Activities list activity will be added to
-				NSMutableArray *domainActivities = [[activitiesLists objectAtIndex:activityLevel - 1] objectAtIndex:domainIndex];
+				NSMutableArray *domainActivities = [[newActivitiesLists objectAtIndex:activityLevel - 1] objectAtIndex:domainIndex];
 				
 				//Make sure it's not already in list, and then add it
 				if (![domainActivities containsObject:currentActivity]) {
@@ -265,16 +304,16 @@ NSMutableArray *currentActivityLevels, *currentDomains;
 		NSInteger levelValue = currentString.integerValue;
 		
 		//Make sure to add levels to array if it's not big enough already
-		while (activitiesLists.count < levelValue) {
+		while (newActivitiesLists.count < levelValue) {
 			//Array for new level to be added
 			NSMutableArray *newLevel = [NSMutableArray new];
 			
-			//Fill levl array with arrays for each domain so far
-			for (NSInteger i = 0; i < domainTitles.count; i++) {
+			//Fill level array with arrays for each domain so far
+			for (NSInteger i = 0; i < newDomainTitles.count; i++) {
 				[newLevel addObject:[NSMutableArray new]];
 			}
 			
-			[activitiesLists addObject:newLevel];
+			[newActivitiesLists addObject:newLevel];
 		}
 		
 		//And add the level to the list of levels the activity will belong to

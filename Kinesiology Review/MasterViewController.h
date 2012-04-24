@@ -12,5 +12,8 @@
 @interface MasterViewController : UITableViewController <NSXMLParserDelegate>
 
 @property (strong, nonatomic) DetailViewController *detailViewController;
+- (IBAction)refresh:(UIBarButtonItem *)sender;
+@property (strong, nonatomic) IBOutlet UILabel *selectInstructions;
+@property (strong, nonatomic) IBOutlet UIActivityIndicatorView *refreshingIndicator;
 
 @end
