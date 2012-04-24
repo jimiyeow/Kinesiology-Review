@@ -22,10 +22,26 @@
 
 @synthesize detailViewController = _detailViewController;
 
+
+//Locally used variables
+
 NSMutableArray *activitiesLists;	//Array of arrays of activities (first dimension is level, second is domain)
 NSMutableArray *domainTitles;	//Names of each domain
 NSInteger level = -1, domain = -1;	//Indexes of selections in each section
 NSInteger const levels = 0;	//Just for better readability below
+
+
+//Variables used during XML parsing
+
+NSMutableArray *newActivitiesLists;	//The new list being populated
+NSMutableArray *newDomainTitles;	//The new list of domain titles
+Activity *currentActivity;	//The activity being added
+NSMutableString *currentString;	//The value of the current element being read
+
+//The levels and domains that the activity will be added to.  These are arrays rather than just numbers in case it will be added to multiple levels and domains.
+NSMutableArray *currentActivityLevels, *currentDomains;
+
+
 
 - (void)awakeFromNib
 {
@@ -42,7 +58,7 @@ NSInteger const levels = 0;	//Just for better readability below
 	
 	//Load the activities list from the external XML file
 	if ([self refreshActivities]) {
-	_selectInstructions.text = @"Choose a level and domain:";
+		_selectInstructions.text = @"Choose a level and domain:";
 	}
 	else {
 		_selectInstructions.text = @"Activities list couldn't be read.";
@@ -142,6 +158,9 @@ NSInteger const levels = 0;	//Just for better readability below
  }
  */
 
+
+
+
 //Method is called when user selects one of the options
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -152,6 +171,7 @@ NSInteger const levels = 0;	//Just for better readability below
 		domain = indexPath.row;
 	}
 	
+	//If both options have been set, update selected activities list
 	if (level != -1 && domain != -1) {
 		_selectInstructions.hidden = YES;
 		_detailViewController.selectedActivities = [[activitiesLists objectAtIndex:level] objectAtIndex:domain];
@@ -192,7 +212,7 @@ NSInteger const levels = 0;	//Just for better readability below
 	return NO;
 }
 
-////If both options have been chosen, update selected activities variable and list title
+//If both options have been chosen, update selected activities variable and list title
 - (void)setCurrentActivities
 {
 	if (level != -1 && domain != -1) {
@@ -214,15 +234,8 @@ NSInteger const levels = 0;	//Just for better readability below
 
 
 
+
 //XML Parsing
-
-NSMutableArray *newActivitiesLists;	//The new list being populated
-NSMutableArray *newDomainTitles;	//The new list of domain titles
-Activity *currentActivity;	//The activity being added
-NSMutableString *currentString;	//The value of the current element being read
-
-//The levels and domains that the activity will be added to.  These are arrays rather than just numbers in case it will be added to multiple levels and domains.
-NSMutableArray *currentActivityLevels, *currentDomains;
 
 //Method called when starting to read XML element
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {

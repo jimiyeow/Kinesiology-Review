@@ -12,8 +12,11 @@
 @interface MasterViewController : UITableViewController <NSXMLParserDelegate>
 
 @property (strong, nonatomic) DetailViewController *detailViewController;
-- (IBAction)refresh:(UIBarButtonItem *)sender;
-@property (strong, nonatomic) IBOutlet UILabel *selectInstructions;
-@property (strong, nonatomic) IBOutlet UIActivityIndicatorView *refreshingIndicator;
+
+@property (strong, nonatomic) IBOutlet UILabel *selectInstructions;	//The label above the table view
+
+@property (strong, nonatomic) IBOutlet UIActivityIndicatorView *refreshingIndicator;	//Refreshing animation
+
+- (IBAction)refresh:(UIBarButtonItem *)sender;	//Refresh button
 
 @end
