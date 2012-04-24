@@ -100,8 +100,13 @@ Activity *displayedActivity;
 //When user hits "Next!" button, load and display the next activity
 - (IBAction)nextActivity:(UIBarButtonItem *)sender {
 	if (selectedActivities != nil) {
-		displayedActivity = [selectedActivities objectAtIndex:(arc4random() % selectedActivities.count)];
-		[self configureView];
+		if (selectedActivities.count != 0) {
+			displayedActivity = [selectedActivities objectAtIndex:(arc4random() % selectedActivities.count)];
+			[self configureView];
+		} else {
+			UIAlertView *alert = [[UIAlertView new] initWithTitle:@"Nothing there!" message:@"There aren't any activities of both the level and domain chosen." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+			[alert show];
+		}
 	} else {
 		UIAlertView *alert = [[UIAlertView new] initWithTitle:@"Hold your horses!" message:@"First choose the level and domain of activities to see!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
 		[alert show];
