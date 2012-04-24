@@ -37,7 +37,7 @@ Activity *displayedActivity;
         // Update the view.
         [self configureView];
     }
-
+	
     if (self.masterPopoverController != nil) {
         [self.masterPopoverController dismissPopoverAnimated:YES];
     }        
@@ -46,7 +46,7 @@ Activity *displayedActivity;
 - (void)configureView
 {
     // Update the user interface for the detail item.
-
+	
 	if (self.detailItem) {
 	    self.detailDescriptionLabel.text = [self.detailItem description];
 	}
@@ -99,7 +99,13 @@ Activity *displayedActivity;
 
 //When user hits "Next!" button, load and display the next activity
 - (IBAction)nextActivity:(UIBarButtonItem *)sender {
-	displayedActivity = [selectedActivities objectAtIndex:(arc4random() % selectedActivities.count)];
-	[self configureView];
+	if (selectedActivities != nil) {
+		displayedActivity = [selectedActivities objectAtIndex:(arc4random() % selectedActivities.count)];
+		[self configureView];
+	} else {
+		UIAlertView *alert = [[UIAlertView new] initWithTitle:@"Hold your horses!" message:@"First choose the level and domain of activities to see!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		[alert show];
+	}
 }
+
 @end
