@@ -22,9 +22,9 @@
 
 @property (strong, nonatomic) IBOutlet UITextView *description;	//Displays the description of the current activity
 
-@property NSMutableArray *selectedActivities;	//Holds the selected list of activities
+@property (strong) NSMutableArray *selectedActivities;	//Holds the selected list of activities
 
-@property NSString *selectedListTitle;	//Holds the title of the selected list of activities
+@property (strong) NSString *selectedListTitle;	//Holds the title of the selected list of activities
 
 - (IBAction)nextActivity:(UIBarButtonItem *)sender;	//Called when user pushes "Next!" button
 

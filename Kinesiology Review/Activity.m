@@ -9,6 +9,7 @@
 
 @implementation Activity
 
-@synthesize title, description;
+@synthesize title = _title;
+@synthesize description = _description;
 
 @end

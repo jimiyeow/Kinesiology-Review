@@ -19,4 +19,6 @@
 
 - (IBAction)refresh:(UIBarButtonItem *)sender;	//Refresh button
 
+- (BOOL)refreshActivities;
+
 @end

@@ -12,7 +12,7 @@
 	NSString *description;
 }
 
-@property NSString *title;
-@property NSString *description;
+@property (strong) NSString *title;
+@property (strong) NSString *description;
 
 @end

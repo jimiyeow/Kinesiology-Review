@@ -22,7 +22,8 @@
 @synthesize activitiesList = _activitiesList;
 @synthesize description = _description;
 @synthesize masterPopoverController = _masterPopoverController;
-@synthesize selectedActivities, selectedListTitle;
+@synthesize selectedActivities = _selectedActivities;
+@synthesize selectedListTitle = _selectedListTitle;
 
 #pragma mark - Managing the detail item
 
@@ -54,7 +55,7 @@ Activity *displayedActivity;
 	//If there is a current activity, display it
 	if (displayedActivity) {
 		_activityTitle.text = displayedActivity.title;
-		_activitiesList.text = selectedListTitle;
+		_activitiesList.text = _selectedListTitle;
 		_description.text = displayedActivity.description;
 	}
 }
@@ -99,9 +100,9 @@ Activity *displayedActivity;
 
 //When user hits "Next!" button, load and display the next activity
 - (IBAction)nextActivity:(UIBarButtonItem *)sender {
-	if (selectedActivities != nil) {
-		if (selectedActivities.count != 0) {
-			displayedActivity = [selectedActivities objectAtIndex:(arc4random() % selectedActivities.count)];
+	if (_selectedActivities != nil) {
+		if (_selectedActivities.count != 0) {
+			displayedActivity = [_selectedActivities objectAtIndex:(arc4random() % _selectedActivities.count)];
 			[self configureView];
 		} else {
 			UIAlertView *alert = [[UIAlertView new] initWithTitle:@"Nothing there!" message:@"There aren't any activities of both the level and domain chosen." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
