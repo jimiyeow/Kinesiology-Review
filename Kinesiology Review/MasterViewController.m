@@ -166,7 +166,7 @@ NSMutableArray *currentActivityLevels, *currentDomains;
 //Method is called when user selects one of the options
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    BOOL noChange = NO;
+	BOOL noChange = NO;
 	
 	//Take note of which option was chosen
 	if (indexPath.section == levels) {

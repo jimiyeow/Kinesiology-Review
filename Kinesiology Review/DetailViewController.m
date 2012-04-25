@@ -127,7 +127,7 @@ NSMutableArray *recentActivities;
 			Activity *nextActivity = [_selectedActivities objectAtIndex:(arc4random() % _selectedActivities.count)];
 			
 			//Make sure next activity hasn't been displayed recently
-			while ([recentActivities containsObject:nextActivity]) {
+			while ([recentActivities containsObject:nextActivity] && _selectedActivities.count != 1) {
 				nextActivity = [_selectedActivities objectAtIndex:(arc4random() % _selectedActivities.count)];
 			}
 			
