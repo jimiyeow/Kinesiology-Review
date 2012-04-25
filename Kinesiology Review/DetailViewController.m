@@ -174,8 +174,6 @@ NSMutableArray *recentActivities;
 	if (recentActivities.count > maxRecentItems) {
 		[recentActivities removeObjectAtIndex:0];
 	}
-	
-	[self configureView];
 }
 
 //Displays the previous activity when button is pressed

@@ -166,32 +166,45 @@ NSMutableArray *currentActivityLevels, *currentDomains;
 //Method is called when user selects one of the options
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    //Take note of which option was chosen
+    BOOL noChange = NO;
+	
+	//Take note of which option was chosen
 	if (indexPath.section == levels) {
-		level = indexPath.row;
+		if (indexPath.row == level) {
+			noChange = YES;
+		} else {
+			level = indexPath.row;
+		}
 	} else {
-		domain = indexPath.row;
-	}
-	
-	//If both options have been set, update selected activities list
-	if (level != -1 && domain != -1) {
-		_selectInstructions.hidden = YES;
-		_detailViewController.selectedActivities = [[activitiesLists objectAtIndex:level] objectAtIndex:domain];
-		_detailViewController.selectedListTitle = [NSString stringWithFormat:@"Level %d — %@", level + 1, [domainTitles objectAtIndex:domain]];
-		[_detailViewController nextActivity:nil];
-		[_detailViewController.nextButton setEnabled:YES];
-	}
-	
-	[tableView cellForRowAtIndexPath:indexPath].accessoryType = UITableViewCellAccessoryCheckmark;
-	[tableView deselectRowAtIndexPath:indexPath animated:YES];
-	
-	//And uncheck other options in the section
-	for (NSInteger i = 0; i < [tableView numberOfRowsInSection:indexPath.section]; i++) {
-		if (i != indexPath.row) {
-			NSIndexPath *otherIndexPath = [NSIndexPath indexPathForRow:i inSection:indexPath.section];
-			[tableView cellForRowAtIndexPath:otherIndexPath].accessoryType = UITableViewCellAccessoryNone;
+		if (indexPath.row == domain) {
+			noChange = YES;
+		} else {
+			domain = indexPath.row;
 		}
 	}
+	
+	if (!noChange) {
+		
+		//If both options have been set, update selected activities list
+		if (level != -1 && domain != -1) {
+			_selectInstructions.hidden = YES;
+			_detailViewController.selectedActivities = [[activitiesLists objectAtIndex:level] objectAtIndex:domain];
+			_detailViewController.selectedListTitle = [NSString stringWithFormat:@"Level %d — %@", level + 1, [domainTitles objectAtIndex:domain]];
+			[_detailViewController nextActivity:nil];
+			[_detailViewController.nextButton setEnabled:YES];
+		}
+		
+		[tableView cellForRowAtIndexPath:indexPath].accessoryType = UITableViewCellAccessoryCheckmark;
+		
+		//And uncheck other options in the section
+		for (NSInteger i = 0; i < [tableView numberOfRowsInSection:indexPath.section]; i++) {
+			if (i != indexPath.row) {
+				NSIndexPath *otherIndexPath = [NSIndexPath indexPathForRow:i inSection:indexPath.section];
+				[tableView cellForRowAtIndexPath:otherIndexPath].accessoryType = UITableViewCellAccessoryNone;
+			}
+		}
+	}
+	[tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 //This method handles refreshing the activities list, and returns whether activities list was successfully refreshed
