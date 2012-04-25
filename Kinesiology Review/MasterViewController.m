@@ -31,6 +31,9 @@ NSInteger const levels = 0;	//Just for better readability below
 
 UITableView *theTableView;	//The table view.  Stored here so after refreshing, cells can be cleared.
 
+//The paths where the files for activities lists and domain titles will be stored
+NSString *activitiesListPath, *domainTitlesPath;
+
 
 //Variables used during XML parsing
 
@@ -57,12 +60,26 @@ NSMutableArray *currentActivityLevels, *currentDomains;
 	// Do any additional setup after loading the view, typically from a nib.
 	self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
 	
-	//Load the activities list from the external XML file
-	if ([self refreshActivities]) {
-		_selectInstructions.text = @"Choose a level and domain:";
+	_selectInstructions.text = @"";
+	
+	//Determine paths for files
+	NSArray *paths = NSSearchPathForDirectoriesInDomains (NSDocumentDirectory, NSUserDomainMask, YES);
+	NSString *documentsDirectory = [paths objectAtIndex:0];
+	activitiesListPath = [documentsDirectory stringByAppendingString:@"/activitiesLists"];
+	domainTitlesPath = [documentsDirectory stringByAppendingString:@"/domainTitles"];
+	
+	//Try to load the activities list from the external XML file, otherwise read saved data
+	if (![self refreshActivities]) {
+		activitiesLists = [NSKeyedUnarchiver unarchiveObjectWithFile:activitiesListPath];
+		domainTitles = [NSKeyedUnarchiver unarchiveObjectWithFile:domainTitlesPath];
+	}
+	
+	if (activitiesLists == nil || domainTitles == nil) {
+		UIAlertView *alert = [[UIAlertView new] initWithTitle:@"Uh-oh" message:@"The activities file the professor posted online couldn't be read." delegate:nil cancelButtonTitle:@"Oh well" otherButtonTitles:nil];
+		[alert show];
 	}
 	else {
-		_selectInstructions.text = @"Activities list couldn't be read.";
+		_selectInstructions.text = @"Choose a level and domain:";
 	}
 }
 
@@ -219,6 +236,11 @@ NSMutableArray *currentActivityLevels, *currentDomains;
 		if ([parser parse]) {
 			activitiesLists = newActivitiesLists;
 			domainTitles = newDomainTitles;
+			
+			//Save activitiesLists and domainTitles in case of lack of connectivity later
+			[NSKeyedArchiver archiveRootObject:activitiesLists toFile:activitiesListPath];
+			[NSKeyedArchiver archiveRootObject:domainTitles toFile:domainTitlesPath];
+			
 			[self.tableView reloadData];	//Refreshes list of levels and domains
 			_detailViewController.selectedActivities = nil;
 			_detailViewController.selectedListTitle = nil;

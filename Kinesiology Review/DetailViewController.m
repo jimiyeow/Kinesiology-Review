@@ -71,6 +71,7 @@ NSMutableArray *recentActivities;
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
 	
+	_activitiesList.text = @"";
 	previousActivities = [NSMutableArray new];
 	recentActivities = [NSMutableArray new];
 	previousListTitles = [NSMutableArray new];

@@ -7,7 +7,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Activity : NSObject {
+@interface Activity : NSObject <NSCoding> {
 	NSString *title;
 	NSString *description;
 }
