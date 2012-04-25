@@ -58,7 +58,7 @@
                                                 </connections>
                                             </barButtonItem>
                                             <barButtonItem style="plain" systemItem="flexibleSpace" id="XWn-jg-SZj"/>
-                                            <barButtonItem enabled="NO" title="Next!" id="akg-yF-Bjw">
+                                            <barButtonItem enabled="NO" title="Another!" style="done" id="akg-yF-Bjw">
                                                 <connections>
                                                     <action selector="nextActivity:" destination="4" id="RyD-bH-mCg"/>
                                                 </connections>

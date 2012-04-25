@@ -19,7 +19,6 @@
 @implementation MasterViewController
 @synthesize selectInstructions = _selectInstructions;
 @synthesize refreshingIndicator = _refreshingIndicator;
-
 @synthesize detailViewController = _detailViewController;
 
 
@@ -29,6 +28,8 @@ NSMutableArray *activitiesLists;	//Array of arrays of activities (first dimensio
 NSMutableArray *domainTitles;	//Names of each domain
 NSInteger level = -1, domain = -1;	//Indexes of selections in each section
 NSInteger const levels = 0;	//Just for better readability below
+
+UITableView *theTableView;	//The table view.  Stored here so after refreshing, cells can be cleared.
 
 
 //Variables used during XML parsing
@@ -93,6 +94,7 @@ NSMutableArray *currentActivityLevels, *currentDomains;
 //2 sections, one for level, and one for domain
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
+	theTableView = tableView;
 	return 2;
 }
 
@@ -206,9 +208,19 @@ NSMutableArray *currentActivityLevels, *currentDomains;
 			[self.tableView reloadData];	//Refreshes list of levels and domains
 			_detailViewController.selectedActivities = nil;
 			_detailViewController.selectedListTitle = nil;
+			[_detailViewController.nextButton setEnabled:NO];
 			level = -1;
 			domain = -1;
 			[_refreshingIndicator stopAnimating];
+			
+			//Uncheck all cells
+			for (NSInteger i = 0; i < 2; i++) {
+				for (NSInteger j = 0; j < [theTableView numberOfRowsInSection:i]; j++) {
+					NSIndexPath *theIndexPath = [NSIndexPath indexPathForRow:j inSection:i];
+					[theTableView cellForRowAtIndexPath:theIndexPath].accessoryType = UITableViewCellAccessoryNone;
+				}
+			}
+			
 			return YES;
 		}
 	}
