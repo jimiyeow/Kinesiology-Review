@@ -176,6 +176,7 @@ NSMutableArray *currentActivityLevels, *currentDomains;
 		_selectInstructions.hidden = YES;
 		_detailViewController.selectedActivities = [[activitiesLists objectAtIndex:level] objectAtIndex:domain];
 		_detailViewController.selectedListTitle = [NSString stringWithFormat:@"Level %d — %@", level + 1, [domainTitles objectAtIndex:domain]];
+		[_detailViewController.nextButton setEnabled:YES];
 	}
 	
 	[tableView cellForRowAtIndexPath:indexPath].accessoryType = UITableViewCellAccessoryCheckmark;

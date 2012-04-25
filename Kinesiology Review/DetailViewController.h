@@ -28,6 +28,8 @@
 
 @property (strong) NSString *selectedListTitle;	//Holds the title of the selected list of activities
 
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *nextButton;	//The next button
+
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *previousButton;	//The previous button
 
 - (IBAction)nextActivity:(UIBarButtonItem *)sender;	//Called when user pushes "Next!" button

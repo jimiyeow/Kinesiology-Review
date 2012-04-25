@@ -13,6 +13,7 @@
 @end
 
 @implementation DetailViewController
+@synthesize nextButton = _nextButton;
 @synthesize previousButton = _previousButton;
 
 @synthesize detailItem = _detailItem;
@@ -83,6 +84,7 @@ NSMutableArray *recentActivities;
 	[self setActivitiesList:nil];
 	[self setDescription:nil];
 	[self setPreviousButton:nil];
+	[self setNextButton:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 	self.detailDescriptionLabel = nil;
@@ -111,36 +113,31 @@ NSMutableArray *recentActivities;
 
 //When user hits "Next!" button, load and display the next activity
 - (IBAction)nextActivity:(UIBarButtonItem *)sender {
-	if (_selectedActivities != nil) {
-		if (_selectedActivities.count != 0) {
-			
-			//If only activity in the selected list is already showing, display an alert
-			if (_selectedActivities.count == 1 && [_selectedListTitle isEqualToString:[previousListTitles lastObject]]) {
-				UIAlertView *alert = [[UIAlertView new] initWithTitle:@"Dead end!" message:@"There's only one activity for this list and domain." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-				[alert show];
-				
-			} else {
-				
-				
-				//The activity to be displayed
-				Activity *nextActivity = [_selectedActivities objectAtIndex:(arc4random() % _selectedActivities.count)];
-				
-				//Make sure next activity hasn't been displayed recently
-				while ([recentActivities containsObject:nextActivity]) {
-					nextActivity = [_selectedActivities objectAtIndex:(arc4random() % _selectedActivities.count)];
-				}
-				
-				[previousActivities addObject:nextActivity];
-				[previousListTitles addObject:_selectedListTitle];
-				[self displayActivity:nextActivity];
-			}
+	if (_selectedActivities.count != 0) {
+		
+		//If only activity in the selected list is already showing, display an alert
+		if (_selectedActivities.count == 1 && [_selectedListTitle isEqualToString:[previousListTitles lastObject]]) {
+			UIAlertView *alert = [[UIAlertView new] initWithTitle:@"Dead end!" message:@"There's only one activity for this list and domain." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+			[alert show];
 			
 		} else {
-			UIAlertView *alert = [[UIAlertView new] initWithTitle:@"Nothing there!" message:@"There aren't any activities of both the level and domain chosen." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-			[alert show];
+			
+			
+			//The activity to be displayed
+			Activity *nextActivity = [_selectedActivities objectAtIndex:(arc4random() % _selectedActivities.count)];
+			
+			//Make sure next activity hasn't been displayed recently
+			while ([recentActivities containsObject:nextActivity]) {
+				nextActivity = [_selectedActivities objectAtIndex:(arc4random() % _selectedActivities.count)];
+			}
+			
+			[previousActivities addObject:nextActivity];
+			[previousListTitles addObject:_selectedListTitle];
+			[self displayActivity:nextActivity];
 		}
+		
 	} else {
-		UIAlertView *alert = [[UIAlertView new] initWithTitle:@"Hold your horses!" message:@"First choose the level and domain of activities to see." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		UIAlertView *alert = [[UIAlertView new] initWithTitle:@"Nothing there!" message:@"There aren't any activities of both the level and domain chosen." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
 		[alert show];
 	}
 }
