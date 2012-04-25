@@ -77,6 +77,7 @@ NSMutableArray *currentActivityLevels, *currentDomains;
 	if (activitiesLists == nil || domainTitles == nil) {
 		UIAlertView *alert = [[UIAlertView new] initWithTitle:@"Uh-oh" message:@"The activities file the professor posted online couldn't be read." delegate:nil cancelButtonTitle:@"Oh well" otherButtonTitles:nil];
 		[alert show];
+		_selectInstructions.text = @"Activities couldn't be loaded.";
 	}
 	else {
 		_selectInstructions.text = @"Choose a level and domain:";
@@ -234,30 +235,32 @@ NSMutableArray *currentActivityLevels, *currentDomains;
 	if (parser != nil) {
 		[parser setDelegate:self];
 		if ([parser parse]) {
-			activitiesLists = newActivitiesLists;
-			domainTitles = newDomainTitles;
-			
-			//Save activitiesLists and domainTitles in case of lack of connectivity later
-			[NSKeyedArchiver archiveRootObject:activitiesLists toFile:activitiesListPath];
-			[NSKeyedArchiver archiveRootObject:domainTitles toFile:domainTitlesPath];
-			
-			[self.tableView reloadData];	//Refreshes list of levels and domains
-			_detailViewController.selectedActivities = nil;
-			_detailViewController.selectedListTitle = nil;
-			[_detailViewController.nextButton setEnabled:NO];
-			level = -1;
-			domain = -1;
-			[_refreshingIndicator stopAnimating];
-			
-			//Uncheck all cells
-			for (NSInteger i = 0; i < 2; i++) {
-				for (NSInteger j = 0; j < [theTableView numberOfRowsInSection:i]; j++) {
-					NSIndexPath *theIndexPath = [NSIndexPath indexPathForRow:j inSection:i];
-					[theTableView cellForRowAtIndexPath:theIndexPath].accessoryType = UITableViewCellAccessoryNone;
+			if (newActivitiesLists.count != 0 && newDomainTitles.count != 0) {
+				activitiesLists = newActivitiesLists;
+				domainTitles = newDomainTitles;
+				
+				//Save activitiesLists and domainTitles in case of lack of connectivity later
+				[NSKeyedArchiver archiveRootObject:activitiesLists toFile:activitiesListPath];
+				[NSKeyedArchiver archiveRootObject:domainTitles toFile:domainTitlesPath];
+				
+				[self.tableView reloadData];	//Refreshes list of levels and domains
+				_detailViewController.selectedActivities = nil;
+				_detailViewController.selectedListTitle = nil;
+				[_detailViewController.nextButton setEnabled:NO];
+				level = -1;
+				domain = -1;
+				[_refreshingIndicator stopAnimating];
+				
+				//Uncheck all cells
+				for (NSInteger i = 0; i < 2; i++) {
+					for (NSInteger j = 0; j < [theTableView numberOfRowsInSection:i]; j++) {
+						NSIndexPath *theIndexPath = [NSIndexPath indexPathForRow:j inSection:i];
+						[theTableView cellForRowAtIndexPath:theIndexPath].accessoryType = UITableViewCellAccessoryNone;
+					}
 				}
+				
+				return YES;
 			}
-			
-			return YES;
 		}
 	}
 	[_refreshingIndicator stopAnimating];
@@ -355,7 +358,7 @@ NSMutableArray *currentActivityLevels, *currentDomains;
 				//Level activity will be added to
 				NSInteger activityLevel = [(NSNumber *)[currentActivityLevels objectAtIndex:i] integerValue];
 				
-				//Activities list activity will be added to
+				//Activities lists activity will be added to
 				NSMutableArray *domainActivities = [[newActivitiesLists objectAtIndex:activityLevel - 1] objectAtIndex:domainIndex];
 				
 				//Make sure it's not already in list, and then add it
