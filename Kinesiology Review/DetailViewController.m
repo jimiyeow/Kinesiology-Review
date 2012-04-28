@@ -13,6 +13,8 @@
 @end
 
 @implementation DetailViewController
+@synthesize currentCard = _currentCard;
+@synthesize largeView = _largeView;
 @synthesize nextButton = _nextButton;
 @synthesize previousButton = _previousButton;
 
@@ -38,6 +40,17 @@ NSMutableArray *previousListTitles;
 //A limited list of previous activities, which should not be repeated yet
 NSMutableArray *recentActivities;
 
+//The center of the display area
+CGPoint displayCenter;
+
+//The center of the card after it's thrown off-screen
+CGPoint leftCenter;
+
+//The center of the card before it's thrown on-screen
+CGPoint rightCenter;
+
+//The amount of time for an animation to take
+NSTimeInterval animationTime = .5;
 
 
 
@@ -86,6 +99,8 @@ NSMutableArray *recentActivities;
 	[self setDescription:nil];
 	[self setPreviousButton:nil];
 	[self setNextButton:nil];
+    [self setCurrentCard:nil];
+	[self setLargeView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 	self.detailDescriptionLabel = nil;
@@ -114,6 +129,13 @@ NSMutableArray *recentActivities;
 
 //When user hits "Next!" button, load and display the next activity
 - (IBAction)nextActivity:(UIBarButtonItem *)sender {
+	
+	if (displayCenter.y == 0) {
+		displayCenter = _currentCard.center;
+		leftCenter = CGPointMake(_largeView.bounds.origin.x - _currentCard.bounds.size.width, displayCenter.y);
+		rightCenter = CGPointMake(_largeView.bounds.origin.x + _largeView.bounds.size.width + _currentCard.bounds.size.width, displayCenter.y);
+	}
+	
 	if (_selectedActivities.count != 0) {
 		
 		//If only activity in the selected list is already showing, display an alert
@@ -123,18 +145,31 @@ NSMutableArray *recentActivities;
 			
 		} else {
 			
-			
-			//The activity to be displayed
-			Activity *nextActivity = [_selectedActivities objectAtIndex:(arc4random() % _selectedActivities.count)];
-			
-			//Make sure next activity hasn't been displayed recently
-			while ([recentActivities containsObject:nextActivity] && _selectedActivities.count != 1) {
-				nextActivity = [_selectedActivities objectAtIndex:(arc4random() % _selectedActivities.count)];
-			}
-			
-			[previousActivities addObject:nextActivity];
-			[previousListTitles addObject:_selectedListTitle];
-			[self displayActivity:nextActivity];
+			[UIView animateWithDuration:animationTime animations:^{
+				_currentCard.center = leftCenter;
+			} completion:^(BOOL finished){
+				if (finished) {
+					
+					//The activity to be displayed
+					Activity *nextActivity = [_selectedActivities objectAtIndex:(arc4random() % _selectedActivities.count)];
+					
+					//Make sure next activity hasn't been displayed recently
+					while ([recentActivities containsObject:nextActivity] && _selectedActivities.count != 1) {
+						nextActivity = [_selectedActivities objectAtIndex:(arc4random() % _selectedActivities.count)];
+					}
+					
+					[previousActivities addObject:nextActivity];
+					[previousListTitles addObject:_selectedListTitle];
+					[self displayActivity:nextActivity];
+					
+					_currentCard.center = rightCenter;
+					
+					[UIView animateWithDuration:animationTime animations:^{
+						_currentCard.center = displayCenter;
+					}];
+					
+				}
+			}];
 		}
 		
 	} else {
@@ -181,6 +216,19 @@ NSMutableArray *recentActivities;
 - (IBAction)backToPrevious:(UIBarButtonItem *)sender {
 	[previousActivities removeLastObject];
 	[previousListTitles removeLastObject];
-	[self displayActivity:[previousActivities lastObject]];
+	
+	[UIView animateWithDuration:animationTime animations:^{
+		_currentCard.center = rightCenter;
+	} completion:^(BOOL finished){
+		if (finished) {
+			[self displayActivity:[previousActivities lastObject]];
+			
+			_currentCard.center = leftCenter;
+			
+			[UIView animateWithDuration:animationTime animations:^{
+				_currentCard.center = displayCenter;
+			}];
+		}
+	}];
 }
 @end
