@@ -50,7 +50,7 @@ CGPoint leftCenter;
 CGPoint rightCenter;
 
 //The amount of time for an animation to take
-NSTimeInterval animationTime = .5;
+NSTimeInterval animationTime = .3;
 
 
 
