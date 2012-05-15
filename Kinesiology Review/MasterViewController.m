@@ -24,6 +24,7 @@
 
 //Locally used variables
 
+NSURL *sourceFile;	//File posted by professor of acivities
 NSMutableArray *activitiesLists;	//Array of arrays of activities (first dimension is level, second is domain)
 NSMutableArray *domainTitles;	//Names of each domain
 NSInteger level = -1, domain = -1;	//Indexes of selections in each section
@@ -67,6 +68,8 @@ NSMutableArray *currentActivityLevels, *currentDomains;
 	NSString *documentsDirectory = [paths objectAtIndex:0];
 	activitiesListPath = [documentsDirectory stringByAppendingString:@"/activitiesLists"];
 	domainTitlesPath = [documentsDirectory stringByAppendingString:@"/domainTitles"];
+	
+	sourceFile = [NSURL URLWithString:@"http://dl.getdropbox.com/u/2037194/activities.xml"];
 	
 	//Try to load the activities list from the external XML file, otherwise read saved data
 	if (![self refreshActivities]) {
@@ -229,7 +232,7 @@ NSMutableArray *currentActivityLevels, *currentDomains;
 - (BOOL)refreshActivities
 {
 	[_refreshingIndicator startAnimating];
-	NSXMLParser *parser = [[NSXMLParser alloc] initWithContentsOfURL:[NSURL URLWithString:@"http://dl.dropbox.com/u/2037194/sample-input.xml"]];
+	NSXMLParser *parser = [[NSXMLParser alloc] initWithContentsOfURL:sourceFile];
 	
 	//If statements should make it so that it only refreshes if it successfully connects to and parses an XML document
 	if (parser != nil) {
