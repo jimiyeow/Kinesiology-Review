@@ -6,13 +6,16 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <MediaPlayer/MPMoviePlayerController.h>
 
 @interface Activity : NSObject <NSCoding> {
-	NSString *title;
 	NSString *description;
+	NSURL *videoURL;
+	MPMoviePlayerController *video;
 }
 
-@property (strong) NSString *title;
 @property (strong) NSString *description;
+@property (strong) NSURL *videoURL;
+@property (strong) MPMoviePlayerController *video;
 
 @end

@@ -9,20 +9,24 @@
 
 @implementation Activity
 
-@synthesize title = _title;
 @synthesize description = _description;
+@synthesize videoURL = _videoURL;
+@synthesize video = _video;
 
 
 //These methods were added for use in storing activities lists.  They're part of the NSCoding protocol
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
-	[aCoder encodeObject:_title forKey:@"title"];
 	[aCoder encodeObject:_description forKey:@"description"];
+	[aCoder encodeObject:_videoURL forKey:@"videoURL"];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
-	_title = [aDecoder decodeObjectForKey:@"title"];
 	_description = [aDecoder decodeObjectForKey:@"description"];
+	_videoURL = [aDecoder decodeObjectForKey:@"videoURL"];
+	_video = [[MPMoviePlayerController alloc] initWithContentURL:videoURL];
+	[_video prepareToPlay];
+	
 	return self;
 }
 

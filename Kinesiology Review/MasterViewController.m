@@ -24,7 +24,7 @@
 
 //Locally used variables
 
-NSURL *sourceFile;	//File posted by professor of acivities
+NSURL *sourcePath;	//File posted by professor of acivities
 NSMutableArray *activitiesLists;	//Array of arrays of activities (first dimension is level, second is domain)
 NSMutableArray *domainTitles;	//Names of each domain
 NSInteger level = -1, domain = -1;	//Indexes of selections in each section
@@ -69,7 +69,7 @@ NSMutableArray *currentActivityLevels, *currentDomains;
 	activitiesListPath = [documentsDirectory stringByAppendingString:@"/activitiesLists"];
 	domainTitlesPath = [documentsDirectory stringByAppendingString:@"/domainTitles"];
 	
-	sourceFile = [NSURL URLWithString:@"http://dl.getdropbox.com/u/2037194/activities.xml"];
+	sourcePath = [NSURL URLWithString:@"http://dl.getdropbox.com/u/2037194/"];
 	
 	//Try to load the activities list from the external XML file, otherwise read saved data
 	if (![self refreshActivities]) {
@@ -232,7 +232,7 @@ NSMutableArray *currentActivityLevels, *currentDomains;
 - (BOOL)refreshActivities
 {
 	[_refreshingIndicator startAnimating];
-	NSXMLParser *parser = [[NSXMLParser alloc] initWithContentsOfURL:sourceFile];
+	NSXMLParser *parser = [[NSXMLParser alloc] initWithContentsOfURL:[sourcePath URLByAppendingPathComponent:@"activities.xml"]];
 	
 	//If statements should make it so that it only refreshes if it successfully connects to and parses an XML document
 	if (parser != nil) {
@@ -370,8 +370,6 @@ NSMutableArray *currentActivityLevels, *currentDomains;
 				}
 			}
 		}
-	} else if ([elementName isEqualToString:@"title"]) {
-		currentActivity.title = currentString;
 	} else if ([elementName isEqualToString:@"description"]) {
 		currentActivity.description = currentString;
 	} else if ([elementName isEqualToString:@"level"]) {
@@ -394,6 +392,10 @@ NSMutableArray *currentActivityLevels, *currentDomains;
 		[currentActivityLevels addObject:[NSNumber numberWithInteger:levelValue]];
 	} else if ([elementName isEqualToString:@"domain"]) {
 		[currentDomains addObject:currentString];
+	} else if ([elementName isEqualToString:@"video"]) {
+		currentActivity.videoURL = [NSURL URLWithString:currentString relativeToURL:sourcePath];
+		currentActivity.video = [[MPMoviePlayerController alloc] initWithContentURL:currentActivity.videoURL];
+		[currentActivity.video prepareToPlay];
 	}
 }
 

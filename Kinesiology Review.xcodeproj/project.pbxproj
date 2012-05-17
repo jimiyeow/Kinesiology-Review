@@ -19,6 +19,7 @@
 		032B6CCE1535539A00457D6C /* Activity.m in Sources */ = {isa = PBXBuildFile; fileRef = 032B6CCD1535539A00457D6C /* Activity.m */; };
 		036062721546917300454D25 /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 036062711546917300454D25 /* icon@2x.png */; };
 		036062751546917C00454D25 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 036062741546917C00454D25 /* icon.png */; };
+		03FBAA5315645B3E007083B5 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03FBAA5215645B3E007083B5 /* MediaPlayer.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +42,7 @@
 		032B6CCD1535539A00457D6C /* Activity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Activity.m; sourceTree = "<group>"; };
 		036062711546917300454D25 /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
 		036062741546917C00454D25 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
+		03FBAA5215645B3E007083B5 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,6 +50,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				03FBAA5315645B3E007083B5 /* MediaPlayer.framework in Frameworks */,
 				032B6CA81535508300457D6C /* UIKit.framework in Frameworks */,
 				032B6CAA1535508300457D6C /* Foundation.framework in Frameworks */,
 				032B6CAC1535508300457D6C /* CoreGraphics.framework in Frameworks */,
@@ -79,6 +82,7 @@
 		032B6CA61535508300457D6C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				03FBAA5215645B3E007083B5 /* MediaPlayer.framework */,
 				032B6CA71535508300457D6C /* UIKit.framework */,
 				032B6CA91535508300457D6C /* Foundation.framework */,
 				032B6CAB1535508300457D6C /* CoreGraphics.framework */,

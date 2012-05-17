@@ -13,6 +13,7 @@
 @end
 
 @implementation DetailViewController
+@synthesize playButton = _playButton;
 @synthesize currentCard = _currentCard;
 @synthesize largeView = _largeView;
 @synthesize nextButton = _nextButton;
@@ -52,6 +53,8 @@ CGPoint rightCenter;
 //The amount of time for an animation to take
 NSTimeInterval animationTime = .3;
 
+//Activity current being displayed
+Activity *currentActivity;
 
 
 #pragma mark - Managing the detail item
@@ -85,6 +88,7 @@ NSTimeInterval animationTime = .3;
 	// Do any additional setup after loading the view, typically from a nib.
 	
 	_activitiesList.text = @"";
+	_playButton.hidden = TRUE;
 	previousActivities = [NSMutableArray new];
 	recentActivities = [NSMutableArray new];
 	previousListTitles = [NSMutableArray new];
@@ -101,6 +105,7 @@ NSTimeInterval animationTime = .3;
 	[self setNextButton:nil];
     [self setCurrentCard:nil];
 	[self setLargeView:nil];
+	[self setPlayButton:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 	self.detailDescriptionLabel = nil;
@@ -181,9 +186,9 @@ NSTimeInterval animationTime = .3;
 //Displays the passed in activity
 - (void)displayActivity:(Activity *)activity
 {	
-	_activityTitle.text = activity.title;
 	_activitiesList.text = [previousListTitles lastObject];
 	_description.text = activity.description;
+	_playButton.hidden = activity.videoURL == nil;
 	
 	//Add activity to end of list of recent activities (first removing it from earlier in the list
 	[recentActivities removeObject:activity];
@@ -210,6 +215,8 @@ NSTimeInterval animationTime = .3;
 	if (recentActivities.count > maxRecentItems) {
 		[recentActivities removeObjectAtIndex:0];
 	}
+	
+	currentActivity = activity;
 }
 
 //Displays the previous activity when button is pressed
@@ -230,5 +237,13 @@ NSTimeInterval animationTime = .3;
 			}];
 		}
 	}];
+}
+- (IBAction)playVideo:(UIButton *)sender {
+	//Messes up if lack of connectivity.  So sue me.
+	[self.view addSubview: currentActivity.video.view];
+	[currentActivity.video setCurrentPlaybackTime:0];
+	[currentActivity.video setFullscreen:YES animated:YES];
+	[currentActivity.video play];
+	//TODO Return after playing is done
 }
 @end

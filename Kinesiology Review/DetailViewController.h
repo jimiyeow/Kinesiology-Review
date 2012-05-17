@@ -6,6 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MediaPlayer/MPMoviePlayerController.h>
 
 #import "Activity.h"
 
@@ -41,5 +42,9 @@
 @property (strong, nonatomic) IBOutlet UITextView *description;	//Displays the description of the current activity
 
 - (void)displayActivity:(Activity *)activity;	//Displays activity
+
+@property (strong, nonatomic) IBOutlet UIButton *playButton; //Button to play video
+
+- (IBAction)playVideo:(UIButton *)sender;	//Plays video when button is pushed
 
 @end
