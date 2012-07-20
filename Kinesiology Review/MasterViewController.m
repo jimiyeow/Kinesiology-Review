@@ -17,14 +17,14 @@
 @end
 
 @implementation MasterViewController
+@synthesize insertURL = _insertURL;
 @synthesize selectInstructions = _selectInstructions;
 @synthesize refreshingIndicator = _refreshingIndicator;
 @synthesize detailViewController = _detailViewController;
 
 
 //Locally used variables
-
-NSURL *sourcePath;	//File posted by professor of acivities
+NSURL *sourcePath;	//File posted by professor of activities
 NSMutableArray *activitiesLists;	//Array of arrays of activities (first dimension is level, second is domain)
 NSMutableArray *domainTitles;	//Names of each domain
 NSInteger level = -1, domain = -1;	//Indexes of selections in each section
@@ -68,8 +68,9 @@ NSMutableArray *currentActivityLevels, *currentDomains;
 	NSString *documentsDirectory = [paths objectAtIndex:0];
 	activitiesListPath = [documentsDirectory stringByAppendingString:@"/activitiesLists"];
 	domainTitlesPath = [documentsDirectory stringByAppendingString:@"/domainTitles"];
-	
-	sourcePath = [NSURL URLWithString:@"http://dl.getdropbox.com/u/2037194/"];
+    
+	//sourcePath = [NSURL URLWithString:@"http://www.google.com/"];
+    sourcePath = [NSURL URLWithString:@"https://www.dropbox.com/s/gv9avfu19weavzy/activities.xml"];
 	
 	//Try to load the activities list from the external XML file, otherwise read saved data
 	if (![self refreshActivities]) {
@@ -91,6 +92,7 @@ NSMutableArray *currentActivityLevels, *currentDomains;
 {
 	[self setSelectInstructions:nil];
 	[self setRefreshingIndicator:nil];
+    [self setInsertURL:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -165,6 +167,17 @@ NSMutableArray *currentActivityLevels, *currentDomains;
     }
 }
 
+- (IBAction)insertURL:(UIBarButtonItem *)sender{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"URlAddress" message:@"Please enter XML file location:" delegate:self cancelButtonTitle:@"Continue" otherButtonTitles: nil];
+    alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+    UITextField *alertTextField = [alert textFieldAtIndex:0];
+    NSString *URL = alertTextField.text;
+    alertTextField.keyboardType = UIKeyboardTypeDefault;
+    alertTextField.placeholder = @"Insert URL address";
+    sourcePath = [NSURL URLWithString:URL];
+    [alert show];
+}
+
 /*
  // Override to support rearranging the table view.
  - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
@@ -228,7 +241,6 @@ NSMutableArray *currentActivityLevels, *currentDomains;
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
-//This method handles refreshing the activities list, and returns whether activities list was successfully refreshed
 - (BOOL)refreshActivities
 {
 	[_refreshingIndicator startAnimating];

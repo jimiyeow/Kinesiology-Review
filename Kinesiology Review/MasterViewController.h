@@ -17,7 +17,11 @@
 
 @property (strong, nonatomic) IBOutlet UIActivityIndicatorView *refreshingIndicator;	//Refreshing animation
 
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *insertURL;
+
 - (IBAction)refresh:(UIBarButtonItem *)sender;	//Refresh button
+
+- (IBAction)insertURL:(UIBarButtonItem *)sender; //inserts URL
 
 - (BOOL)refreshActivities;
 
