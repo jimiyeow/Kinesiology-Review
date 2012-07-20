@@ -69,17 +69,18 @@ NSMutableArray *currentActivityLevels, *currentDomains;
 	activitiesListPath = [documentsDirectory stringByAppendingString:@"/activitiesLists"];
 	domainTitlesPath = [documentsDirectory stringByAppendingString:@"/domainTitles"];
     
-	//sourcePath = [NSURL URLWithString:@"http://www.google.com/"];
-    sourcePath = [NSURL URLWithString:@"https://www.dropbox.com/s/gv9avfu19weavzy/activities.xml"];
-	
-	//Try to load the activities list from the external XML file, otherwise read saved data
-	if (![self refreshActivities]) {
-		activitiesLists = [NSKeyedUnarchiver unarchiveObjectWithFile:activitiesListPath];
-		domainTitles = [NSKeyedUnarchiver unarchiveObjectWithFile:domainTitlesPath];
-	}
+    //sourcePath = [NSURL URLWithString:@"http://www.google.com/"];
+
+    sourcePath = [NSURL URLWithString:@"http://dl.dropbox.com/u/89854530/"];
+    
+    //Try to load the activities list from the external XML file, otherwise read saved data
+    if (![self refreshActivities]) {
+        activitiesLists = [NSKeyedUnarchiver unarchiveObjectWithFile:activitiesListPath];
+	 	domainTitles = [NSKeyedUnarchiver unarchiveObjectWithFile:domainTitlesPath];
+    }
 	
 	if (activitiesLists == nil || domainTitles == nil) {
-		UIAlertView *alert = [[UIAlertView new] initWithTitle:@"Uh-oh" message:@"The activities file the professor posted online couldn't be read." delegate:nil cancelButtonTitle:@"Oh well" otherButtonTitles:nil];
+		UIAlertView *alert = [[UIAlertView new] initWithTitle:@"Error" message:@"The XML file posted online couldn't be read." delegate:nil cancelButtonTitle:@"Try again" otherButtonTitles:nil];
 		[alert show];
 		_selectInstructions.text = @"Activities couldn't be loaded.";
 	}
@@ -168,14 +169,36 @@ NSMutableArray *currentActivityLevels, *currentDomains;
 }
 
 - (IBAction)insertURL:(UIBarButtonItem *)sender{
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"URlAddress" message:@"Please enter XML file location:" delegate:self cancelButtonTitle:@"Continue" otherButtonTitles: nil];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"URL Address" message:@"Please enter XML file location:" delegate:self cancelButtonTitle:@"Continue" otherButtonTitles: nil];
     alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+
     UITextField *alertTextField = [alert textFieldAtIndex:0];
-    NSString *URL = alertTextField.text;
-    alertTextField.keyboardType = UIKeyboardTypeDefault;
+    alertTextField.keyboardType = UIKeyboardTypeURL;
     alertTextField.placeholder = @"Insert URL address";
+    NSString *URL = alertTextField.text;
+    
     sourcePath = [NSURL URLWithString:URL];
+    
     [alert show];
+
+}
+
+-(void)loadActivitiesList
+{
+    //Try to load the activities list from the external XML file, otherwise read saved data
+    if (![self refreshActivities]) {
+        activitiesLists = [NSKeyedUnarchiver unarchiveObjectWithFile:activitiesListPath];
+	 	domainTitles = [NSKeyedUnarchiver unarchiveObjectWithFile:domainTitlesPath];
+    }
+	
+	if (activitiesLists == nil || domainTitles == nil) {
+		UIAlertView *alert = [[UIAlertView new] initWithTitle:@"Error" message:@"The XML file posted online couldn't be read." delegate:nil cancelButtonTitle:@"Try again" otherButtonTitles:nil];
+		[alert show];
+		_selectInstructions.text = @"Activities couldn't be loaded.";
+	}
+	else {
+		_selectInstructions.text = @"Choose a level and domain:";
+	}
 }
 
 /*
